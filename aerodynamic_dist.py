@@ -25,8 +25,8 @@ b = 20.19  # [m]
 # Ignore all values where y > halfspan and y < 0
 on_wing0 = ylst <= b/2
 on_wing1 = ylst > 0
-on_wing = np.logical_and(on_wing0, on_wing1)
-#print(on_wing)
+on_wing = np.logical_and(on_wing0, on_wing1)  # Condition where data should be ignored
+# Only look at data where condition is true, so data on wing
 ylst_wing = ylst[on_wing]
 chordlst_wing = chordlst[on_wing]
 Ailst_wing = Ailst[on_wing]
@@ -34,14 +34,7 @@ Cllst_wing = Cllst[on_wing]
 ICdlst_wing = ICdlst[on_wing]
 Cmlst_wing = Cmlst[on_wing]
 
-#print(Cllst)
-#print(Cllst_wing)
-
-#plt.plot(ylst_wing, Cllst_wing)
-#plt.show()
-
-# f = sp.interpolate.interp1d(ylst_wing, Cllst_wing, kind='linear', fill_value='extrapolate')
-g = sp.interpolate.interp1d(ylst_wing, Cllst_wing, kind='cubic', fill_value='extrapolate')
+# Functions which interpolate the cl, cd and cm data at the given y coordinate (y between 0 and 10.1)
 
 
 def cl_dist(y):
