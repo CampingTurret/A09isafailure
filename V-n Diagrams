@@ -1,1 +1,55 @@
+import matplotlib.pyplot as plt
+import numpy as np
+c=2
+
+# velocity values
+v_s0_to = [26.78898361, 35.1367608, 28.13693378, 69.32403138, 90.92625327, 72.81223164]
+v_s0_l = [25.33688156, 33.23216586, 26.61176582, 65.5663088, 85.99757806, 68.86543049]
+v_s1 = [31.46465211, 41.26942519, 33.04786944, 81.42363899, 106.7962476, 85.52065921]
+v_a = [53.21493067, 66.667528, 55.40127987, 137.7086036, 172.5209836, 143.3663972]
+v_c = 200.6476
+v_d = 300.9714
+v_f_to = [50.34344338, 66.0310803, 52.8765911, 130.2778224, 170.8739962, 136.8330547]
+v_f_a = [56.6363738, 74.28496534, 59.48616499, 146.5625502, 192.2332457, 153.9371866]
+v_f_l = [48.2201705, 63.24616945, 50.6464808, 124.7832565, 163.6672559, 131.0620169]
+labels= ["Sea-Level, OEW", "Sea-Level, MTOW", "Sea-Level, ZFW", "Cruise, OEW", "Cruise, MTOW", "Cruise, ZFW"]
+
+# n values
+n_max = [2.860362875, 2.609587504, 2.81029987, 2.860362875, 2.609587504, 2.81029987]
+n_min = -1
+
+i=0
+# making data points
+for i in range(len(v_a)):
+    x = np.linspace(0, 300.9714, 100000)
+
+#y1 = np.piecewise(x, [x < 0, ((x>=0) & (x<53.21493067)), ((x>=53.21493067) & (x<300.9714)), (x==300.9714)], [0, lambda x: (x/v_s1[c])**2, lambda x: n_max[c], lambda x: 0])
+    # upper
+    y1 = np.piecewise(x, [x < 0, np.logical_and((x>=0), (x<v_a[i])), np.logical_and((x>=v_a[i]), (x<v_d)), (x==v_d)], [0, lambda x: (x/v_s1[i])**2, lambda x: n_max[i], lambda x: 0])
+    
+    # lower
+    y2 = np.piecewise(x, [x < 0, np.logical_and((x>=0), (x<v_s1[i])), np.logical_and((x>=v_s1[i]), (x<v_c)), np.logical_and((x>=v_c), (x<v_d))], [lambda x: 0, lambda x: -(x/v_s1[i])**2, lambda x: n_min, lambda x: -n_min/(v_d-v_c)*(x-v_d)])
+
+    # plot
+    plt.subplot(3, 2, int(i+1))
+    plt.plot(x, y1, color="black",)
+    plt.plot(x, y2, color="black")
+                       
+    # naming the x axis
+    plt.xlabel('Velocity')
+                      
+    # naming the y axis
+    plt.ylabel('n')
+  
+    # title 
+    plt.title(labels[i])
+    
+plt.subplots_adjust(wspace=0.4,
+                    hspace=0.5)
+plt.suptitle('V-n Diagrams')
+plt.show()
+    
+
+
+
 
