@@ -3,6 +3,8 @@ from scipy import interpolate  # for some reason this needs to be imported too o
 import numpy as np
 from matplotlib import pyplot as plt
 
+#ALL FOR AOA=0 RIGHT NOW
+
 # Importing result in python
 folder = 'alpha_dist'
 fname = folder + '/inducedangle_alpha=0.csv'  # Name of file
