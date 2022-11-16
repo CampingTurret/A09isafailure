@@ -20,3 +20,5 @@ CD_span=cd_dist(y)
 CM_span=cm_dist(y)
 
 Lprime = CL_span*q0*chord_y
+Dprime = CD_span*q0*chord_y
+Mprime = CM_span*q0*(chord_y)^2
