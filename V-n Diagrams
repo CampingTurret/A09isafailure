@@ -18,12 +18,12 @@ labels= ["Sea-Level, OEW", "Sea-Level, MTOW", "Sea-Level, ZFW", "Cruise, OEW", "
 # n values
 n_max = 2.609587504
 n_min = -1
-
+n_flaps_max = 2
 #iteration
 i=0
 # making data points
 for i in range(len(v_a)):
-    x = np.linspace(0, v_c*1.25, 100000)
+    x = np.linspace(0, v_d, 100000)
 
     # upper
     y1 = np.piecewise(x, [x < 0, np.logical_and((x>=0), (x<v_a[i])), np.logical_and((x>=v_a[i]), (x<v_d)), (x==v_d)], [0, lambda x: (x/v_s1[i])**2, lambda x: n_max, lambda x: 0])
@@ -31,11 +31,23 @@ for i in range(len(v_a)):
     # lower
     y2 = np.piecewise(x, [x < 0, np.logical_and((x>=0), (x<v_s1[i])), np.logical_and((x>=v_s1[i]), (x<v_c)), np.logical_and((x>=v_c), (x<v_d))], [lambda x: 0, lambda x: -(x/v_s1[i])**2, lambda x: n_min, lambda x: -n_min/(v_d-v_c)*(x-v_d)])
 
+    # flaps down landing configuration
+    x_l = np.linspace(0, np.sqrt(np.dot(2, v_s1[i]**2)), 100000)
+    
+    y_l = np.piecewise(x_l, [x_l < 0, np.logical_and((x_l>=0),(x_l<np.sqrt(np.dot(2, v_s0_l[i]**2)))), np.logical_and((x_l>=np.sqrt(np.dot(2, v_s0_l[i]**2))),(x_l<=np.sqrt(np.dot(2, v_s1[i]**2)))) ], [lambda x_l: 0, lambda x_l: (x_l/v_s0_l[i])**2, 2])
+    
+    # flaps down takeoff configuration
+    x_to = np.linspace(0, np.sqrt(np.dot(2, v_s1[i]**2)), 100000)
+    
+    y_to = np.piecewise(x_to, [x_to < 0, np.logical_and((x_to>=0),(x_to<np.sqrt(np.dot(2, v_s0_to[i]**2)))), np.logical_and((x_to>=np.sqrt(np.dot(2, v_s0_to[i]**2))),(x_to<=np.sqrt(np.dot(2, v_s1[i]**2)))) ], [lambda x_to: 0, lambda x_to: (x_to/v_s0_to[i])**2, 2])
+
     # plot
     plt.subplot(3, 2, int(i+1))
+    plt.plot(x_to, y_to, 'g-',)
+    plt.plot(x_l, y_l, 'b-')
     plt.plot(x, y1, color="black",)
     plt.plot(x, y2, color="black")
-                       
+    
     # naming the x axis
     plt.xlabel('Velocity')
                       
@@ -44,7 +56,8 @@ for i in range(len(v_a)):
   
     # title 
     plt.title(labels[i])
-
+plt.figlegend(['flaps down (takeoff)', 'flaps down (landing)'])
+plt.legend(loc='best')
 #subplot spacing    
 plt.subplots_adjust(wspace=0.4,
                     hspace=0.5)
