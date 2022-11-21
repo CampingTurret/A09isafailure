@@ -1,6 +1,8 @@
 import math
+from ssl import HAS_TLSv1
 import scipy
 import numpy
+import pandas
 
 
 def fuelvolume(A,Cr,b,labda):
@@ -39,13 +41,50 @@ def fueltorque():
 
     return T
 
-def structureloading(array, p, g, Cr, b ,y):
-
-    for in array
+def structurearea():
 
 
+
+    return A
+
+
+
+def structureloading(array, p, g, Cr, b, labda ,y ):
+    a = numpy.array(array)
+    for q in range(a.ndim):
+        bound1 = a[q,0]
+        bound2 = a[q,1]
+
+
+
+
+        if bound1 < y:
+            if bound2 > y:
+
+                t = a[q,2]
+
+                c = Cr * labda * 2* y / b
+
+
+
+
+
+                h1 = 
+                h2 = 
+                w1 = 
+                w2 = 
+                circumference = h1 + h2 + w1 + w2
+                area = t * circumference
+                
+                W = area * p * g
+
+                return W
+            else:
+                break
+        else:
+            break
+        break
     return W
-
 
 
 
