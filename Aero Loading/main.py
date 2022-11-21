@@ -23,12 +23,12 @@ D_prime=force_span(cd_dist,sample,q)
 M_prime=moment_span(cm_dist,sample,q)
 N_prime=normal_span(sample, q, CL_des)
 
+uniform= np.full(sample,4000)
+
 # plt.plot(np.linspace(0, 10.1, sample), L_prime)
 # plt.plot(np.linspace(0, 10.1, sample), D_prime)
 plt.plot(np.linspace(0, 10.1, sample), N_prime)
 # plt.plot(np.linspace(0, 10.1 ,sample), M_prime)
-
-uniform= np.full(sample,4000)
 
 # Shear Diagram
 
