@@ -30,8 +30,8 @@ def fuelshear(p,g,A,Cr,b,labda,y):
 def fuelmomenent(p,g,A,Cr,b,labda,y): 
     ratio = 1 - labda
     c1 = b/6 *(labda * labda + labda + 1)
-    c2 = b * b *(ratio*ratio/24 - ratio/12 + 1/8 -(labda*labda+labda+1)/12)
-    V = p * g * A * Cr * Cr *(4/(12*b*b)*ratio * ratio * y * y * y*y +2/(3*b) * ratio * y * y *y + 0.5* y*y - c1*y + c2)
+    c2 = b * b *(ratio*ratio/48 - ratio/12 + 1/8 -(labda*labda+labda+1)/12)
+    V = p * g * A * Cr * Cr *(-4/(12*b*b)*ratio * ratio * y * y * y*y +2/(3*b) * ratio * y * y *y - 0.5* y*y + c1*y + c2)
     return V
 
 
@@ -91,10 +91,10 @@ def structureloading(y, array, p, g, Cr, b, labda ):
                 c = Cr - Cr * (1-labda) * 2* y / b
 
 
-                h1 = c * 0.112163
-                h2 = c * 0.058208
+                h1 = c * 0.108861
+                h2 = c * 0.128807
                 w1 = c * 0.550489
-                w2 = c * 0.550859
+                w2 = c * 0.550010
                 circumference = h1 + h2 + w1 + w2
                 area = t * circumference
                 
