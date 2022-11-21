@@ -26,7 +26,7 @@ uniform= np.full(sample,4000)
 
 # plt.plot(np.linspace(0, 10.1, sample), L_prime)
 # plt.plot(np.linspace(0, 10.1, sample), D_prime)
-plt.plot(np.linspace(0, 10.1, sample), N_prime)
+# plt.plot(np.linspace(0, 10.1, sample), N_prime)
 # plt.plot(np.linspace(0, 10.1 ,sample), M_prime)
 
 # Shear Diagram
@@ -37,7 +37,7 @@ plt.plot(np.linspace(0,10.1,sample),shear_dist)
 # Bending Diagram
 
 bending_dist=getBendingDist(y,shear_dist,sample)
-plt.plot(np.linspace(0,10.1,sample),bending_dist)
+# plt.plot(np.linspace(0,10.1,sample),bending_dist)
 
 # Torque Diagram
 
