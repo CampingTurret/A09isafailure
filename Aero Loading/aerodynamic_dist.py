@@ -92,26 +92,35 @@ def cm_dist1(y):
 # Distributions at arbitrary lift coefficient (if it is in valid range)
 
 def lift_factor(CLd):
+    # Factor which linearly scales depending on the current wing lift coefficient wrt to lift coefficient at AoA=0
+    # and AoA = 10
     return (CLd - CL0) / (CL10 - CL0)
 
 
 def alpha(CLd=CL_des):
+    # Returns alpha [rad] for a given wing lift coefficient (Design lift coefficient when no CL is specified)
     # RETURNS IN RADIANS
     sinalpha = lift_factor(CLd) * np.sin(np.radians(10))
     return np.arcsin(sinalpha)
 
 
 def cl_dist(y, CLd=CL_des):
+    # Returns local lift coefficient distribution for a given wing lift coefficient (Design lift coefficient when no
+    # CL is specified)
     Cl_dist = cl_dist0(y) + lift_factor(CLd) * (cl_dist1(y) - cl_dist0(y))
     return Cl_dist
 
 
 def cd_dist(y, CLd=CL_des):
+    # Returns local (induced) drag coefficient distribution for a given wing lift coefficient (Design lift coefficient
+    # when no CL is specified)
     Cd_dist = cl_dist0(y) + lift_factor(CLd) * (cd_dist1(y) - cd_dist0(y))
     return Cd_dist
 
 
 def cm_dist(y, CLd=CL_des):
+    # Returns local moment coefficient distribution for a given wing lift coefficient (Design lift coefficient when no
+    # CL is specified)
     Cm_dist = cl_dist0(y) + lift_factor(CLd) * (cm_dist1(y) - cm_dist0(y))
     return Cm_dist
 
