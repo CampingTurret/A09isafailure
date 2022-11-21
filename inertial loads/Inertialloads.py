@@ -80,13 +80,10 @@ def structureArea(y, array, Cr, b, labda):
 
 def structureloading(y, array, p, g, Cr, b, labda ):
     a = array
-    print(a)
-    print(a.ndim)
     for q in range(a.ndim + 999999999999):
         bound1 = a[0,q]
         bound2 = a[1,q]
 
-        print(q)
 
 
 
@@ -110,7 +107,7 @@ def structureloading(y, array, p, g, Cr, b, labda ):
                 return W
 
 
-    return 
+    return 0 
 
 
 def structuredensity(m1,m2,b,array,Cr,labda):
@@ -132,7 +129,7 @@ def structureshear(y, array, p, g, Cr, b, labda, m2):
 
 def structureMoment(y, array, p, g, Cr, b, labda ,m2):
 
-    V = -integrate.quad(structureshear,0,y, args=(array,p,g,Cr,b,labda, m2)) + integrate.quad(structureshear,0,b/2, args=(array,p,g,Cr,b,labda, m2))
+    M = integrate.quad(structureshear,0,y, args=(array,p,g,Cr,b,labda, m2)) + integrate.quad(structureshear,0,b/2, args=(array,p,g,Cr,b,labda, m2))
 
     return M[0]
 
