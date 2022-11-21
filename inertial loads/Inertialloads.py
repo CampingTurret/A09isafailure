@@ -26,10 +26,10 @@ def fuelshear(p,g,A,Cr,b,labda,y):
 
 
 def fuelmomenent(p,g,A,Cr,b,labda,y): 
-    c1 = b/6 *(labda * labda + labda + 1)
-    c2 = 
     ratio = 1 - labda
-    V = p * g * A * Cr * Cr *(-4/(3*b*b)*ratio * ratio * y * y * y +2/b * ratio * y * y - y + c1)
+    c1 = b/6 *(labda * labda + labda + 1)
+    c2 = b * b *(ratio*ratio/24 - ratio/12 + 1/8 -(labda*labda+labda+1)/12)
+    V = p * g * A * Cr * Cr *(4/(12*b*b)*ratio * ratio * y * y * y*y +2/(3*b) * ratio * y * y *y + 0.5* y*y - c1*y + c2)
     return V
 
 
@@ -41,5 +41,12 @@ def fueltorque():
 
 def structureloading(array, p, g, Cr, b ,y):
 
+    for in array
+
 
     return W
+
+
+
+
+
