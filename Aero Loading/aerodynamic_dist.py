@@ -91,32 +91,36 @@ def cm_dist1(y):
 
 # Distributions at arbitrary lift coefficient (if it is in valid range)
 
+def lift_factor(CLd):
+    return (CLd - CL0) / (CL10 - CL0)
+
 
 def alpha(CLd=CL_des):
-    sinalpha = (CLd - CL0) / (CL10 - CL0) * np.sin(np.radians(10))
+    sinalpha = lift_factor(CLd) * np.sin(np.radians(10))
     return np.arcsin(sinalpha)
 
 
 def cl_dist(y, CLd=CL_des):
-    lift_factor = (CLd - CL0) / (CL10 - CL0)
-    Cl_dist = cl_dist0(y) + lift_factor * (cl_dist1(y) - cl_dist0(y))
-    return Cl_dist, alpha
+    Cl_dist = cl_dist0(y) + lift_factor(CLd) * (cl_dist1(y) - cl_dist0(y))
+    return Cl_dist
 
 
-# def cd_dist(y, alpha=alpha()):
-#     drag_factor = (CLd - CL0) / (CL10 - CL0)
-#     Cl_dist = cl_dist0(y) + (CLd - CL0)/(CL10 - CL0) * (cl_dist1(y) - cl_dist0(y))
-#     sinalpha = drag_factor * np.sin(np.radians(10))
-#     alpha = np.arcsin(sinalpha)
-#     return Cd_dist
-#
-#
-# def cm_dist(y, CLd=CL_des):
-#     moment_factor = (CLd - CL0) / (CL10 - CL0)
-#     Cl_dist = cl_dist0(y) + (CLd - CL0)/(CL10 - CL0) * (cl_dist1(y) - cl_dist0(y))
-#     sinalpha = moment_factor * np.sin(np.radians(10))
-#     alpha = np.arcsin(sinalpha)
-#     return Cm_dist
+def cd_dist(y, CLd=CL_des):
+    Cd_dist = cl_dist0(y) + lift_factor(CLd) * (cd_dist1(y) - cd_dist0(y))
+    return Cd_dist
+
+
+def cm_dist(y, CLd=CL_des):
+    Cm_dist = cl_dist0(y) + lift_factor(CLd) * (cm_dist1(y) - cm_dist0(y))
+    return Cm_dist
+
+x = np.linspace(0, b/2, 100)
+# plt.plot(x, cl_dist(x, 0.3))
+# plt.plot(x, cl_dist(x, 0.6))
+# plt.plot(x, cl_dist(x, 0.9))
+plt.plot(x, cl_dist(x, 20))
+# plt.plot(x, cl_dist(x))
+plt.show()
 
 
 
