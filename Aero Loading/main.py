@@ -2,7 +2,8 @@ import numpy as np
 import scipy as sc
 import variables
 import shear
-from shear import *
+import bending
+import torque
 from matplotlib import pyplot as plt
 
 from force_dists import *
@@ -22,16 +23,26 @@ D_prime=force_span(cd_dist,sample,q)
 M_prime=moment_span(cm_dist,sample,q)
 N_prime=normal_span(sample, q, CL_des)
 
-# print(getShearDist(y,L_prime,sample))
+# plt.plot(np.linspace(0, 10.1, sample), L_prime)
+# plt.plot(np.linspace(0, 10.1, sample), D_prime)
+plt.plot(np.linspace(0, 10.1, sample), N_prime)
+# plt.plot(np.linspace(0, 10.1 ,sample), M_prime)
 
 uniform= np.full(sample,4000)
 
-# plt.plot(np.linspace(0,10.1,sample),uniform)
-# plt.plot(np.linspace(0,10.1,sample),D_prime)
-# plt.plot(np.linspace(0,10.1,sample),M_prime)
-# plt.plot(np.linspace(0,10.1,sample),getShearDist(y,uniform,sample))
-plt.plot(np.linspace(0, 10.1, sample), L_prime)
-plt.plot(np.linspace(0, 10.1, sample), D_prime)
-plt.plot(np.linspace(0, 10.1, sample), N_prime)
+# Shear Diagram
+
+shear_dist=shear.getShearDist(y,N_prime,sample)
+plt.plot(np.linspace(0,10.1,sample),shear_dist)
+
+# Bending Diagram
+
+bending_dist=bending.getBendingDist(y,shear_dist,sample)
+plt.plot(np.linspace(0,10.1,sample),bending_dist)
+
+# Torque Diagram
+
+
+
 plt.show()
 
