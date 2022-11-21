@@ -96,6 +96,7 @@ def lift_factor(CLd):
 
 
 def alpha(CLd=CL_des):
+    # RETURNS IN RADIANS
     sinalpha = lift_factor(CLd) * np.sin(np.radians(10))
     return np.arcsin(sinalpha)
 
@@ -114,14 +115,15 @@ def cm_dist(y, CLd=CL_des):
     Cm_dist = cl_dist0(y) + lift_factor(CLd) * (cm_dist1(y) - cm_dist0(y))
     return Cm_dist
 
-x = np.linspace(0, b/2, 100)
-# plt.plot(x, cl_dist(x, 0.3))
-# plt.plot(x, cl_dist(x, 0.6))
-# plt.plot(x, cl_dist(x, 0.9))
-plt.plot(x, cl_dist(x, 20))
+# x = np.linspace(0, b/2, 100)
+# plt.plot(x, cd_dist(x, CL0))
+# plt.plot(x, cd_dist(x, CL10))
+# plt.plot(x, cd_dist(x))
+# plt.plot(x, cl_dist(x, 20))
 # plt.plot(x, cl_dist(x))
-plt.show()
+# plt.show()
 
+# print(np.degrees(alpha(CL_des)))
 
 
 
