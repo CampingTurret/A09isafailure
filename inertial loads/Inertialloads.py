@@ -83,11 +83,6 @@ def structureloading(y, array, p, g, Cr, b, labda ):
     for q in range(a.ndim + 999999999999):
         bound1 = a[0,q]
         bound2 = a[1,q]
-
-
-
-
-
         if bound1 < y:
             if bound2 > y:
 
@@ -105,8 +100,6 @@ def structureloading(y, array, p, g, Cr, b, labda ):
                 
                 W = area * p * g
                 return W
-
-
     return 0 
 
 
