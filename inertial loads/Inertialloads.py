@@ -91,10 +91,10 @@ def structureloading(y, array, p, g, Cr, b, labda ):
                 c = Cr - Cr * (1-labda) * 2* y / b
 
 
-                h1 = c * 0.108861
-                h2 = c * 0.128807
+                h1 = c * 0.112163
+                h2 = c * 0.058208
                 w1 = c * 0.550489
-                w2 = c * 0.550010
+                w2 = c * 0.550859
                 circumference = h1 + h2 + w1 + w2
                 area = t * circumference
                 
