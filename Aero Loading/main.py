@@ -1,8 +1,7 @@
 import numpy as np
 import scipy as sc
 import variables
-import shear
-import bending
+from aero_loading import *
 import torque
 from matplotlib import pyplot as plt
 
@@ -32,12 +31,12 @@ plt.plot(np.linspace(0, 10.1, sample), N_prime)
 
 # Shear Diagram
 
-shear_dist=shear.getShearDist(y,N_prime,sample)
+shear_dist=getShearDist(y,N_prime,sample)
 plt.plot(np.linspace(0,10.1,sample),shear_dist)
 
 # Bending Diagram
 
-bending_dist=bending.getBendingDist(y,shear_dist,sample)
+bending_dist=getBendingDist(y,shear_dist,sample)
 plt.plot(np.linspace(0,10.1,sample),bending_dist)
 
 # Torque Diagram
