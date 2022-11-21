@@ -124,6 +124,7 @@ def cm_dist(y, CLd=CL_des):
     Cm_dist = cl_dist0(y) + lift_factor(CLd) * (cm_dist1(y) - cm_dist0(y))
     return Cm_dist
 
+
 # x = np.linspace(0, b/2, 100)
 # plt.plot(x, cd_dist(x, CL0))
 # plt.plot(x, cd_dist(x, CL10))
