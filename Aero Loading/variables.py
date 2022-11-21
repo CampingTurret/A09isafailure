@@ -18,9 +18,14 @@ y_MAC = 4.33  # [m]
 x_LEMAC = 0.22  # [m]
 gamma = 5  # [deg]
 tc = 0.13  # [-]
-winglet_height = 1.01  # [m]
 delta_AR = 0.8  # [-]
 A_virtual = 9.2  # [-]
 CL_des = 0.537  # [-]
 M_cruise = 0.68  # [-]
 M_dd = 0.687  # [-]
+
+wlt_height = 1.01  # [m]
+wlt_span = 2.8 # [m] - Both winglets combined
+wlt_cr = 1.37  # [m]
+wlt_ct = 0.5 # [m] 
+wlt_gamma = 0.8727 # [rad], includes wing dihedral
