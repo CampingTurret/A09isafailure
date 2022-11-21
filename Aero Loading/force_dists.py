@@ -30,5 +30,5 @@ def moment_span(dist, sample, q):  # Input distribution function, sample number,
 
 def normal_span(sample, q, CLd=CL_des):  # Input distribution function, sample number, pressure, Wing lift coefficient
     AoA = alpha(CLd)
-    normal_dist = np.cos(AoA) * force_span(cl_dist(), sample, q) + np.sin(AoA) * force_span(cd_dist(), sample, q)
+    normal_dist = np.cos(AoA) * force_span(cl_dist, sample, q) + np.sin(AoA) * force_span(cd_dist, sample, q)
     return normal_dist
