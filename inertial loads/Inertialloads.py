@@ -1,7 +1,7 @@
 import math
-from ssl import HAS_TLSv1
-import scipy
-import numpy
+import scipy as sc
+import scipy.integrate as integrate
+import numpy as np
 import pandas
 
 
@@ -41,19 +41,52 @@ def fueltorque():
 
     return T
 
-def structurearea():
 
 
+def structureArea(y, array, Cr, b, labda):
+    a = array
 
-    return A
-
-
-
-def structureloading(array, p, g, Cr, b, labda ,y ):
-    a = numpy.array(array)
     for q in range(a.ndim):
-        bound1 = a[q,0]
-        bound2 = a[q,1]
+        bound1 = a[0,q]
+        bound2 = a[1,q]
+
+        
+
+
+
+
+        if bound1 < y:
+            if bound2 >= y:
+
+                t = a[2,q]
+
+                c = Cr - Cr * (1-labda) * 2* y / b
+
+
+                h1 = c * 0.108861
+                h2 = c * 0.128807
+                w1 = c * 0.550489
+                w2 = c * 0.550010
+                circumference = h1 + h2 + w1 + w2
+                area = t * circumference
+                
+                W = area
+                return W
+
+
+    return 0
+
+
+
+def structureloading(y, array, p, g, Cr, b, labda ):
+    a = array
+    print(a)
+    print(a.ndim)
+    for q in range(a.ndim + 999999999999):
+        bound1 = a[0,q]
+        bound2 = a[1,q]
+
+        print(q)
 
 
 
@@ -61,31 +94,45 @@ def structureloading(array, p, g, Cr, b, labda ,y ):
         if bound1 < y:
             if bound2 > y:
 
-                t = a[q,2]
+                t = a[2,q]
 
-                c = Cr * labda * 2* y / b
-
-
+                c = Cr - Cr * (1-labda) * 2* y / b
 
 
-
-                h1 = 
-                h2 = 
-                w1 = 
-                w2 = 
+                h1 = c * 0.108861
+                h2 = c * 0.128807
+                w1 = c * 0.550489
+                w2 = c * 0.550010
                 circumference = h1 + h2 + w1 + w2
                 area = t * circumference
                 
                 W = area * p * g
-
                 return W
-            else:
-                break
-        else:
-            break
-        break
-    return W
 
 
+    return 
 
+
+def structuredensity(m1,m2,b,array,Cr,labda):
+
+
+    M = m1 - m2
+
+    V = integrate.quad(structureArea,0,b/2, args=(array,Cr,b,labda))
+
+    q = M/(V[0])
+    return q
+
+
+def structureshear(y, array, p, g, Cr, b, labda, m2):
+    
+    V = -integrate.quad(structureloading,0,y, args=(array,p,g,Cr,b,labda)) + integrate.quad(structureloading,0,b/2, args=(array,p,g,Cr,b,labda)) + m2 *g
+
+    return V[0]
+
+def structureMoment(y, array, p, g, Cr, b, labda ,m2):
+
+    V = -integrate.quad(structureshear,0,y, args=(array,p,g,Cr,b,labda, m2)) + integrate.quad(structureshear,0,b/2, args=(array,p,g,Cr,b,labda, m2))
+
+    return M[0]
 
