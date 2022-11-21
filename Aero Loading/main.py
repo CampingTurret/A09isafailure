@@ -21,10 +21,12 @@ L_prime=force_span(cl_dist0,sample,q)
 D_prime=force_span(cd_dist0,sample,q)
 M_prime=moment_span(cm_dist0,sample,q)
 
-print(getShearDist(y,L_prime,sample))
+# print(getShearDist(y,L_prime,sample))
 
-plt.plot(np.linspace(0,10.1,sample),L_prime)
+uniform=np.full(sample,4000)
+
+plt.plot(np.linspace(0,10.1,sample),uniform)
 # plt.plot(np.linspace(0,10.1,sample),D_prime)
 # plt.plot(np.linspace(0,10.1,sample),M_prime)
-plt.plot(np.linspace(0,10.1,sample),getShearDist(y,L_prime,sample))
+plt.plot(np.linspace(0,10.1,sample),getShearDist(y,uniform,sample))
 plt.show()
