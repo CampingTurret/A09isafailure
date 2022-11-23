@@ -123,6 +123,14 @@ def wingletweight(m1,V1,V2):
 
     return m2
 
+def generatearray(b):
+
+    middlepoint = b/4
+
+    a = np.array([[0,middlepoint,0.01],[middlepoint,b/2,0.01]])
+
+    return a
+
 
 def structureshear(y, array, p, g, Cr, b, labda, m2):
     
