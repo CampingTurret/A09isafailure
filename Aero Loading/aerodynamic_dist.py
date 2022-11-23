@@ -146,7 +146,7 @@ on_winglet = ylst > b/2
 # Only look at data where condition is true, so data on wing
 ylst_winglet = ylst[on_winglet]
 chordlst_winglet = chordlst[on_winglet]
-print(ylst_winglet)
+# print(chordlst_winglet)
 # AoA = 0
 Cllst_winglet0 = Cllst0[on_winglet]
 ICdlst_winglet0 = ICdlst0[on_winglet]
@@ -159,12 +159,11 @@ Cmlst_winglet1 = Cmlst1[on_winglet]
 
 # Functions which interpolate the cl, cd and cm data at the given y coordinate (y between 0 and 10.1)
 # Distributions at AoA = 0
-
+# print(Cllst_winglet0)
 
 def cl_winglet_dist0(y):
     f = sp.interpolate.interp1d(ylst_winglet, Cllst_winglet0, kind='cubic', fill_value='extrapolate')
     return f(y)
-
 
 
 def cd_winglet_dist0(y):
@@ -196,39 +195,40 @@ def cm_winglet_dist1(y):
 
 
 CL0_winglet, err0 = sp.integrate.quad(cl_winglet_dist0, min(ylst_winglet), max(ylst_winglet))
+# print(CL0_winglet)
 CL10_winglet, err1 = sp.integrate.quad(cl_winglet_dist1, min(ylst_winglet), max(ylst_winglet))
+# print(CL10_winglet)
 
 # Distributions at arbitrary lift coefficient (if it is in valid range)
 
-def winglet_lift_factor(CLd):
-    # Factor which linearly scales depending on the current wing lift coefficient wrt to lift coefficient at AoA=0
-    # and AoA = 10
-    return (CLd - CL0_winglet) / (CL10_winglet - CL0_winglet)
+
+# def winglet_lift_factor(CLd):
+#     # Factor which linearly scales depending on the current wing lift coefficient wrt to lift coefficient at AoA=0
+#     # and AoA = 10
+#     return (CLd - CL0_winglet) / (CL10_winglet - CL0_winglet)
 
 
 def cl_winglet_dist(y, CLd=CL_des):
     # Returns local lift coefficient distribution for a given wing lift coefficient (Design lift coefficient when no
     # CL is specified)
-    Cl_dist = cl_winglet_dist0(y) + winglet_lift_factor(CLd) * (cl_winglet_dist1(y) - cl_winglet_dist0(y))
+    Cl_dist = cl_winglet_dist0(y) + lift_factor(CLd) * (cl_winglet_dist1(y) - cl_winglet_dist0(y))
     return Cl_dist
 
-CL, err = sp.integrate.quad(cl_winglet_dist, min(ylst_winglet), max(ylst_winglet))
-print(CL, err)
 
 def cd_winglet_dist(y, CLd=CL_des):
     # Returns local (induced) drag coefficient distribution for a given wing lift coefficient (Design lift coefficient
     # when no CL is specified)
-    Cd_dist = cl_winglet_dist0(y) + winglet_lift_factor(CLd) * (cd_winglet_dist1(y) - cd_winglet_dist0(y))
+    Cd_dist = cl_winglet_dist0(y) + lift_factor(CLd) * (cd_winglet_dist1(y) - cd_winglet_dist0(y))
     return Cd_dist
 
 
 def cm_winglet_dist(y, CLd=CL_des):
     # Returns local moment coefficient distribution for a given wing lift coefficient (Design lift coefficient when no
     # CL is specified)
-    Cm_dist = cl_winglet_dist0(y) + winglet_lift_factor(CLd) * (cm_winglet_dist1(y) - cm_winglet_dist0(y))
+    Cm_dist = cl_winglet_dist0(y) + lift_factor(CLd) * (cm_winglet_dist1(y) - cm_winglet_dist0(y))
     return Cm_dist
 
 
-def winglet_force():
-    winglet_force = 0
-    return winglet_force
+# CL_winglet, err = sp.integrate.quad(cl_winglet_dist, min(ylst_winglet), max(ylst_winglet))
+# print(CL_winglet, err)
+
