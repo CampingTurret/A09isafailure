@@ -70,6 +70,8 @@ def structureloading(y, array, p, g, Cr, b, labda ):
     a = array
     if y == 0:
         return 0
+    if y == 10.1:
+        return 0
     for q in range(a.shape[0]):
         bound1 = a[q,0]
         bound2 = a[q,1]
@@ -117,7 +119,7 @@ def generatearray(b):
     #builds a constant array for use in the structure
     middlepoint = b/4
 
-    a = np.array([[0,middlepoint,0.01],[middlepoint,b/2,0.01]])
+    a = np.array([[0,middlepoint,0.01],[middlepoint,b/2 + 0.0001,0.01]])
 
     return a
 
