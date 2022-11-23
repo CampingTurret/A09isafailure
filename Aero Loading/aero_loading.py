@@ -32,20 +32,19 @@ def getWingletMoment(winglet_force): # Calculate Moment due to Winglet
 
 def getWingletTorque(winglet_drag, winglet_force):
     
+    # Geometric Calculations
     mac_wlt = (2/3)*wlt_cr*(1+(wlt_taper)+(wlt_taper)**2)/(1+(wlt_taper))
     ymac_wlt = yMAC(wlt_span,wlt_cr,wlt_ct) # Obtain location of winglet MAC
     wlt_z = b/2*np.sin(np.deg2rad(gamma))+ymac_wlt*np.sin(np.deg2rad(wlt_gamma))
     
     wlt_le_sweep = np.arcsin((1.8-wlt_le_offset)/(wlt_span/2))
-    # wlt_quarter_sweep = np.arctan(np.tan(wlt_le_sweep)-0.25*2*(wlt_cr/wlt_span)*(1-(wlt_ct/wlt_cr)))
     xmac=ymac_wlt*np.tan(wlt_le_sweep)
     ac_wlt=xmac+0.25*mac_wlt
     ac_wlt_offset=ac_wlt+wlt_le_offset
     
-    ltorque_arm = cr*0.465-ac_wlt_offset
+    ltorque_arm = cr*0.465-ac_wlt_offset # Torque arm for lift
     
-    print("torque arm: "+str(ltorque_arm))
-    # print(cr*0.465)
+    # print("torque arm: "+str(ltorque_arm))
     
     # Due to drag
     drag=tangential_winglet(sample,q)
@@ -53,6 +52,7 @@ def getWingletTorque(winglet_drag, winglet_force):
     # Due to lift
     wlt_force_y = winglet_force*np.sin(wlt_gamma)
     
+    # Final torque due to winglet
     winglet_torque=wlt_z*drag-moment_winglet(sample, q)+wlt_force_y*ltorque_arm
     
     return winglet_torque
@@ -85,22 +85,19 @@ def getTorqueDist(y,ldist,mdist,sample):
     torque_dist=np.zeros(sample+1) # Creates array
     winglet_torque=getWingletTorque(tangential_winglet(sample,q),winglet_force)
     
+    # Calculate spanwise distance of AC to CoG
     dx=np.zeros(sample)
     j=0
     for j in range(sample):
         # print(y[j])
         dx[j]=((0.465-0.25)*(cr-0.20495049505*(y[j])))
         # print(dx[j])
+        
     i=0
-    print(winglet_torque)
-    for i in range(sample):
+    # print(winglet_torque) 
+    for i in range(sample): # Numerical integration for each point in data (Bounds: [x,L])
         torque_dist[i]=sp.trapz(ldist[i:(sample-2)]*dx[i:(sample-2)]+mdist[i:(sample-2)],y[i:(sample-2)])+winglet_torque
-        # print(mdist[i])
         
         torque_dist[400]=0
     # print(torque_dist)
     return torque_dist
-
-# def getTorqueDistribution(q, t, T):
-#     torque_dist = sp.integrate.quad(lambda x: q * ((0.465 - 0.25) * (cr - 0.20495049505(x))) + t) + (51.46*9.81)*(0.465 - (0.506+0.465*ct-1.247)) * (cr - 0.20495049505(x))(1 - 0.09900990099(x))
-#     return torque_dist
