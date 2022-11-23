@@ -4,7 +4,6 @@ import scipy.integrate as integrate
 import numpy as np
 import pandas
 
-
 def fuelvolume(A,Cr,b,labda):
     V = A*Cr*Cr*b*(labda*labda + labda + 1)/3
     return V
@@ -35,12 +34,6 @@ def fuelmomenent(p,g,A,Cr,b,labda,y):
     return V
 
 
-def fueltorque():
-
-
-
-    return T
-
 
 
 def structureArea(y, array, Cr, b, labda):
@@ -49,12 +42,6 @@ def structureArea(y, array, Cr, b, labda):
     for q in range(a.ndim):
         bound1 = a[0,q]
         bound2 = a[1,q]
-
-        
-
-
-
-
         if bound1 < y:
             if bound2 >= y:
 
@@ -62,7 +49,7 @@ def structureArea(y, array, Cr, b, labda):
 
                 c = Cr - Cr * (1-labda) * 2* y / b
 
-
+                #hardcoded airfoil data
                 h1 = c * 0.108861
                 h2 = c * 0.128807
                 w1 = c * 0.550489
@@ -73,7 +60,7 @@ def structureArea(y, array, Cr, b, labda):
                 W = area
                 return W
 
-
+    print("ERROR OUT OF BOUNDS")
     return 0
 
 
@@ -90,7 +77,7 @@ def structureloading(y, array, p, g, Cr, b, labda ):
 
                 c = Cr - Cr * (1-labda) * 2* y / b
 
-
+                #hardcoded airfoil data
                 h1 = c * 0.108861
                 h2 = c * 0.128807
                 w1 = c * 0.550489
@@ -100,11 +87,13 @@ def structureloading(y, array, p, g, Cr, b, labda ):
                 
                 W = area * p * g
                 return W
+
+    print("ERROR OUT OF BOUNDS")
     return 0
 
 
 def structuredensity(m1,m2,b,array,Cr,labda):
-
+    #relation wingbox volume to structural weight (NOT MATERIAL DENSITY!!!)
 
     M = m1 - m2
 
@@ -112,6 +101,22 @@ def structuredensity(m1,m2,b,array,Cr,labda):
 
     q = M/(V[0])
     return q
+
+def wingletweight(m1,V1,V2):
+
+
+    q = m1/(V1+V2)
+    m2 = q *V2
+
+    return m2
+
+def generatearray(b):
+    #builds a constant array for use in the structure
+    middlepoint = b/4
+
+    a = np.array([[0,middlepoint,0.01],[middlepoint,b/2,0.01]])
+
+    return a
 
 
 def structureshear(y, array, p, g, Cr, b, labda, m2):
@@ -125,4 +130,11 @@ def structureMoment(y, array, p, g, Cr, b, labda ,m2):
     M = integrate.quad(structureshear,0,y, args=(array,p,g,Cr,b,labda, m2))[0] - integrate.quad(structureshear,0,b/2, args=(array,p,g,Cr,b,labda, m2))[0]
 
     return M
+
+def winglettorque(m2,g,labda,Cr):
+
+    T = m2 * g * (0.506 + 0.465*(Cr*labda) - 1.247)
+
+    return T
+
 
