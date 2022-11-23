@@ -117,14 +117,14 @@ def cl_dist(y, CLd=CL_des):
 def cd_dist(y, CLd=CL_des):
     # Returns local (induced) drag coefficient distribution for a given wing lift coefficient (Design lift coefficient
     # when no CL is specified)
-    Cd_dist = cl_dist0(y) + lift_factor(CLd) * (cd_dist1(y) - cd_dist0(y))
+    Cd_dist = cd_dist0(y) + lift_factor(CLd) * (cd_dist1(y) - cd_dist0(y))
     return Cd_dist
 
 
 def cm_dist(y, CLd=CL_des):
     # Returns local moment coefficient distribution for a given wing lift coefficient (Design lift coefficient when no
     # CL is specified)
-    Cm_dist = cl_dist0(y) + lift_factor(CLd) * (cm_dist1(y) - cm_dist0(y))
+    Cm_dist = cm_dist0(y) + lift_factor(CLd) * (cm_dist1(y) - cm_dist0(y))
     return Cm_dist
 
 
@@ -228,6 +228,7 @@ def cm_winglet_dist(y, CLd=CL_des):
     Cm_dist = cm_winglet_dist0(y) + lift_factor(CLd) * (cm_winglet_dist1(y) - cm_winglet_dist0(y))
     return Cm_dist
 
+print(cm_winglet_dist(0))
 # y = np.linspace(b/2, b/2+1.4, 400)
 # print(cd_winglet_dist(y))
 
