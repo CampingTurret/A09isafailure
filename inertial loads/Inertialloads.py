@@ -144,3 +144,10 @@ def structureMoment(y, array, p, g, Cr, b, labda ,m2):
 
     return M
 
+def winglettorque(m2,g,labda,Cr):
+
+    T = m2 * g * (0.506 + 0.465*(Cr*labda) - 1.247)
+
+    return T
+
+
