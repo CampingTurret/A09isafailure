@@ -24,7 +24,7 @@ def fuelshear(p,g,A,Cr,b,labda,y):
     c1 = b/6 *(labda * labda + labda + 1)
     ratio = 1 - labda
     V = p * g * A * Cr * Cr *(-4/(3*b*b)*ratio * ratio * y * y * y +2/b * ratio * y * y - y + c1)
-    return 
+    return V
 
 
 def fuelmoment(p,g,A,Cr,b,labda,y): 
@@ -33,9 +33,6 @@ def fuelmoment(p,g,A,Cr,b,labda,y):
     c2 = b * b *(ratio*ratio/48 - ratio/12 + 1/8 -(labda*labda+labda+1)/12)
     V = p * g * A * Cr * Cr *(-4/(12*b*b)*ratio * ratio * y * y * y*y +2/(3*b) * ratio * y * y *y - 0.5* y*y + c1*y + c2)
     return V
-
-
-
 
 def structureArea(y, array, Cr, b, labda):
     a = array
@@ -64,13 +61,11 @@ def structureArea(y, array, Cr, b, labda):
     print("ERROR OUT OF BOUNDS")
     return 0
 
-
-
 def structureloading(y, array, p, g, Cr, b, labda ):
     a = array
     if y == 0:
         return 0
-    if y == 10.1:
+    elif y == 10.1:
         return 0
     for q in range(a.shape[0]):
         bound1 = a[q,0]

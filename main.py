@@ -52,8 +52,14 @@ for i in range(sample):
     structure_shear[i]=structureshear(y[i],a,structure_density,g,cr,b,taper,wlt_weight)
     structure_moment[i]=structureMoment(y[i],a,structure_density,g,cr,b,taper,wlt_weight)
 
+# print(fuel_load)
+print(structure_shear)
+
+inertial_load=fuel_load+structure_load
 inertial_shear=fuel_shear+structure_shear
 inertial_moment=fuel_moment+structure_moment
+
+plt.plot(y,inertial_shear)
 
 # Shear Diagram
 
@@ -66,7 +72,7 @@ shear_dist=getShearDist(y,N_prime,sample)
 # Bending Diagram
 
 bending_dist=getBendingDist(y,shear_dist,sample)
-plt.plot(x,bending_dist)
+# plt.plot(x,bending_dist)
 
 # Torque Diagram
 
