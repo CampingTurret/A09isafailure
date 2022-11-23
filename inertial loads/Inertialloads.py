@@ -100,6 +100,8 @@ def structureloading(y, array, p, g, Cr, b, labda ):
                 
                 W = area * p * g
                 return W
+
+    print("ERROR OUT OF BOUNDS")
     return 0
 
 
