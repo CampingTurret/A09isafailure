@@ -2,7 +2,7 @@ import math
 import scipy as sc
 import scipy.integrate as integrate
 import numpy as np
-import pandas
+# import pandas
 
 def fuelvolume(A,Cr,b,labda):
     V = A*Cr*Cr*b*(labda*labda + labda + 1)/3
@@ -26,7 +26,7 @@ def fuelshear(p,g,A,Cr,b,labda,y):
     return 
 
 
-def fuelmomenent(p,g,A,Cr,b,labda,y): 
+def fuelmoment(p,g,A,Cr,b,labda,y): 
     ratio = 1 - labda
     c1 = b/6 *(labda * labda + labda + 1)
     c2 = b * b *(ratio*ratio/48 - ratio/12 + 1/8 -(labda*labda+labda+1)/12)
