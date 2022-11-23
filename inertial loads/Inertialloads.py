@@ -113,6 +113,14 @@ def structuredensity(m1,m2,b,array,Cr,labda):
     q = M/(V[0])
     return q
 
+def wingletweight(m1,V1,V2):
+
+
+    q = m1/(V1+V2)
+    m2 = q *V2
+
+    return m2
+
 
 def structureshear(y, array, p, g, Cr, b, labda, m2):
     
