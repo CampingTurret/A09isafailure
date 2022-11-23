@@ -24,8 +24,17 @@ CL_des = 0.537  # [-]
 M_cruise = 0.68  # [-]
 M_dd = 0.687  # [-]
 
+# Winglet
+
 wlt_height = 1.01  # [m]
 wlt_span = 2.8 # [m] - Both winglets combined
 wlt_cr = 1.37  # [m]
 wlt_ct = 0.5 # [m] 
 wlt_gamma = 0.8727 # [rad], includes wing dihedral
+wlt_le_offset = 0.515 # [m]
+wlt_taper = wlt_ct/wlt_cr
+
+# Load Specific
+
+q=7000
+sample=400

@@ -9,5 +9,6 @@ from variables import *
 # lift at quarter chord, weight at centroid.
 # centroid is 0.465 of chord
 
-def getTorqueDistribution(q, t, T, P):
-    return sc.integrate.quad(lambda x: q * ((0.465 - 0.25) * (cr - 0.20495049505(x))) + t) + T(1 - 0.09900990099(x)) + P(0.465 - blank) * (cr - 0.20495049505(x))(1 - 0.09900990099(x))
+def getTorqueDistribution(q, t, T):
+    torque_dist = sc.integrate.quad(lambda x: q * ((0.465 - 0.25) * (cr - 0.20495049505(x))) + t) + (51.46*9.81)*(0.465 - (0.506+0.465*ct-1.247)) * (cr - 0.20495049505(x))(1 - 0.09900990099(x))
+    return torque_dist
