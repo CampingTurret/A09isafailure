@@ -31,13 +31,16 @@ uniform= np.full(sample,4000)
 
 # Shear Diagram
 
+x=np.linspace(0,10.1,sample)
+x=np.append(x,10.1)
+
 shear_dist=getShearDist(y,N_prime,sample)
-# plt.plot(np.linspace(0,10.1,sample),shear_dist)
+# plt.plot(x,shear_dist)
 
 # Bending Diagram
 
 bending_dist=getBendingDist(y,shear_dist,sample)
-# plt.plot(np.linspace(0,10.1,sample),bending_dist)
+plt.plot(x,bending_dist)
 
 # Torque Diagram
 
@@ -47,7 +50,7 @@ bending_dist=getBendingDist(y,shear_dist,sample)
 
 # Plotting
 
-ld, (ax1, ax2) = plt.subplots(1, 2)
-ax1.plot(np.linspace(0,10.1,sample),shear_dist)
-ax2.plot(np.linspace(0,10.1,sample),bending_dist)
+# ld, (ax1, ax2) = plt.subplots(1, 2)
+# ax1.plot(np.linspace(0,10.1,sample),shear_dist)
+# ax2.plot(np.linspace(0,10.1,sample),bending_dist)
 plt.show()
