@@ -35,12 +35,6 @@ def fuelmomenent(p,g,A,Cr,b,labda,y):
     return V
 
 
-def fueltorque():
-
-
-
-    return T
-
 
 
 def structureArea(y, array, Cr, b, labda):
