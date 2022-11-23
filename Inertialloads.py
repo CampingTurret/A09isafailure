@@ -1,4 +1,5 @@
 import math
+from pickletools import float8
 import scipy as sc
 import scipy.integrate as integrate
 import numpy as np
@@ -39,13 +40,13 @@ def fuelmoment(p,g,A,Cr,b,labda,y):
 def structureArea(y, array, Cr, b, labda):
     a = array
 
-    for q in range(a.ndim):
-        bound1 = a[0,q]
-        bound2 = a[1,q]
+    for q in range(a.shape[0]):
+        bound1 = a[q,0]
+        bound2 = a[q,1]
         if bound1 < y:
             if bound2 >= y:
 
-                t = a[2,q]
+                t = a[q,2]
 
                 c = Cr - Cr * (1-labda) * 2* y / b
 
@@ -67,7 +68,9 @@ def structureArea(y, array, Cr, b, labda):
 
 def structureloading(y, array, p, g, Cr, b, labda ):
     a = array
-    for q in range(a.shape[1]):
+    if y == 0:
+        return 0
+    for q in range(a.shape[0]):
         bound1 = a[q,0]
         bound2 = a[q,1]
         if bound1 < y:
@@ -87,8 +90,8 @@ def structureloading(y, array, p, g, Cr, b, labda ):
                 
                 W = area * p * g
                 return W
-
-    print("ERROR OUT OF BOUNDS")
+    
+    print("ERROR OUT OF BOUNDS" + "Y =" + str(y) + "Returned 0")
     return 0
 
 
