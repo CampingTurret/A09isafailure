@@ -26,7 +26,7 @@ def getWingletMoment(winglet_force): # Calculate Moment due to Winglet
     wlt_force_y = winglet_force*np.sin(wlt_gamma)
     
     winglet_moment = wlt_z*wlt_force_z + wlt_y*wlt_force_y # Calculate moment (sum of z and y components)
-    print(winglet_moment)
+    # print(winglet_moment)
     
     return winglet_moment
 
@@ -44,8 +44,8 @@ def getWingletTorque(winglet_drag, winglet_force):
     
     ltorque_arm = cr*0.465-ac_wlt_offset
     
-    print(ltorque_arm)
-    print(cr*0.465)
+    print("torque arm: "+str(ltorque_arm))
+    # print(cr*0.465)
     
     # Due to drag
     drag=tangential_winglet(sample,q)
@@ -92,9 +92,10 @@ def getTorqueDist(y,ldist,mdist,sample):
         dx[j]=((0.465-0.25)*(cr-0.20495049505*(y[j])))
         # print(dx[j])
     i=0
+    print(winglet_torque)
     for i in range(sample):
-        torque_dist[i]=sp.trapz(ldist[i:(sample-2)]*dx[i:(sample-2)]+mdist[i:(sample-2)],y[i:(sample-2)]) # +winglet_torque
-        print(mdist[i])
+        torque_dist[i]=sp.trapz(ldist[i:(sample-2)]*dx[i:(sample-2)]+mdist[i:(sample-2)],y[i:(sample-2)])+winglet_torque
+        # print(mdist[i])
         
         torque_dist[400]=0
     # print(torque_dist)
