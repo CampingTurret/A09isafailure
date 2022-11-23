@@ -142,7 +142,7 @@ def cm_dist(y, CLd=CL_des):
 
 
 # Ignore all values where y is not on winglet
-on_winglet = ylst > b/2
+on_winglet = ylst > b/2 + 0.03
 # Only look at data where condition is true, so data on wing
 ylst_winglet = ylst[on_winglet]
 chordlst_winglet = chordlst[on_winglet]
@@ -218,16 +218,18 @@ def cl_winglet_dist(y, CLd=CL_des):
 def cd_winglet_dist(y, CLd=CL_des):
     # Returns local (induced) drag coefficient distribution for a given wing lift coefficient (Design lift coefficient
     # when no CL is specified)
-    Cd_dist = cl_winglet_dist0(y) + lift_factor(CLd) * (cd_winglet_dist1(y) - cd_winglet_dist0(y))
+    Cd_dist = cd_winglet_dist0(y) + lift_factor(CLd) * (cd_winglet_dist1(y) - cd_winglet_dist0(y))
     return Cd_dist
 
 
 def cm_winglet_dist(y, CLd=CL_des):
     # Returns local moment coefficient distribution for a given wing lift coefficient (Design lift coefficient when no
     # CL is specified)
-    Cm_dist = cl_winglet_dist0(y) + lift_factor(CLd) * (cm_winglet_dist1(y) - cm_winglet_dist0(y))
+    Cm_dist = cm_winglet_dist0(y) + lift_factor(CLd) * (cm_winglet_dist1(y) - cm_winglet_dist0(y))
     return Cm_dist
 
+# y = np.linspace(b/2, b/2+1.4, 400)
+# print(cd_winglet_dist(y))
 
 # CL_winglet, err = sp.integrate.quad(cl_winglet_dist, min(ylst_winglet), max(ylst_winglet))
 # print(CL_winglet, err)
