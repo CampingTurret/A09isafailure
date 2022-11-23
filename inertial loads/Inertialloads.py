@@ -73,7 +73,7 @@ def structureArea(y, array, Cr, b, labda):
                 W = area
                 return W
 
-
+    print("ERROR OUT OF BOUNDS")
     return 0
 
 
