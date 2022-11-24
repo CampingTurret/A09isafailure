@@ -66,14 +66,15 @@ inertial_moment=fuel_moment+structure_moment
 x=np.linspace(0,10.1,sample)
 x=np.append(x,10.1)
 
-plt.plot(x,inertial_shear)
+
+
 shear_dist=getShearDist(y,N_prime,sample)
-plt.plot(x,shear_dist)
+#plt.plot(x,shear_dist)
 
 # Bending Diagram
 
 bending_dist=getBendingDist(y,shear_dist,sample)
-# plt.plot(x,bending_dist)
+#plt.plot(x,bending_dist)
 
 # Torque Diagram
 
@@ -86,7 +87,6 @@ sum_shear= inertial_shear + shear_dist
 sum_moment = inertial_moment + bending_dist
 sum_torque = torque_dist + winglet_m_torque
 
-plt.plot(x,sum_shear)
 
 
 
