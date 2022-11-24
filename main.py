@@ -29,11 +29,11 @@ N_prime=normal_span(sample, q, CL_des)
 # Inertial Loading
 
 fuel_load=np.zeros(400)
-fuel_shear=np.zeros(400)
-fuel_moment=np.zeros(400)
+fuel_shear=np.zeros(401)
+fuel_moment=np.zeros(401)
 structure_load=np.zeros(400)
-structure_shear=np.zeros(400)
-structure_moment=np.zeros(400)
+structure_shear=np.zeros(401)
+structure_moment=np.zeros(401)
 a=generatearray(b)
 
 wlt_weight = wingletweight(m1,wing_vol,wlt_vol)
@@ -59,15 +59,16 @@ inertial_load=fuel_load+structure_load
 inertial_shear=fuel_shear+structure_shear
 inertial_moment=fuel_moment+structure_moment
 
-plt.plot(y,inertial_shear)
+
 
 # Shear Diagram
 
 x=np.linspace(0,10.1,sample)
 x=np.append(x,10.1)
 
+plt.plot(x,inertial_shear)
 shear_dist=getShearDist(y,N_prime,sample)
-# plt.plot(x,shear_dist)
+plt.plot(x,shear_dist)
 
 # Bending Diagram
 
@@ -78,6 +79,16 @@ bending_dist=getBendingDist(y,shear_dist,sample)
 
 torque_dist=getTorqueDist(y,N_prime,M_prime,sample)
 # plt.plot(x,torque_dist)
+
+#Sum of diagrams
+sum_load= inertial_load + L_prime
+sum_shear= inertial_shear + shear_dist
+sum_moment = inertial_moment + bending_dist
+sum_torque = torque_dist + winglet_m_torque
+
+plt.plot(x,sum_shear)
+
+
 
 # Plotting
 
