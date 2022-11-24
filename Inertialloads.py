@@ -121,7 +121,7 @@ def generatearray(b):
 
 def structureshear(y, array, p, g, Cr, b, labda, m2):
     
-    V = -integrate.quad(structureloading,0,y, args=(array,p,g,Cr,b,labda))[0] - integrate.quad(structureloading,0,b/2, args=(array,p,g,Cr,b,labda))[0] + m2 *g
+    V = - integrate.quad(structureloading,0,y, args=(array,p,g,Cr,b,labda))[0] + integrate.quad(structureloading,0,b/2, args=(array,p,g,Cr,b,labda))[0] + m2 *g
 
     return V
 
