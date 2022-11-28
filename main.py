@@ -15,7 +15,7 @@ n=1 # Load Factor
 # Aerodynamic Loading
 
 y=np.linspace(0,10.1,sample)
-L_prime=force_span(cl_dist0,sample,q)
+L_prime=force_span(cl_dist,sample,q)
 D_prime=force_span(cd_dist,sample,q)
 M_prime=moment_span(cm_dist,sample,q)
 N_prime=normal_span(sample, q, CL_des)
@@ -66,17 +66,14 @@ x=np.linspace(0,10.1,sample)
 x=np.append(x,10.1)
 
 shear_dist=getShearDist(y,N_prime,sample)
-#plt.plot(x,shear_dist)
 
 # Bending Diagram
 
 bending_dist=getBendingDist(y,shear_dist,sample)
-#plt.plot(x,bending_dist)
 
 # Torque Diagram
 
 torque_dist=getTorqueDist(y,N_prime,M_prime,sample)
-# plt.plot(x,torque_dist)
 
 print(shear_dist)
 
@@ -86,14 +83,63 @@ sum_shear = n*inertial_shear + shear_dist #n=401
 sum_moment = n*inertial_moment + bending_dist #n=401
 torque_dist[400]+=n*winglet_m_torque
 
-# sum_torque = torque_dist #torque wrong dimention
-
-plt.plot(y,L_prime)
-# plt.plot
-
 # Plotting
 
-# ld, (ax1, ax2) = plt.subplots(1, 2)
-# ax1.plot(np.linspace(0,10.1,sample),shear_dist)
-# ax2.plot(np.linspace(0,10.1,sample),bending_dist)
+# Shear Plot
+
+shear = plt.figure(figsize=(10,5))
+
+plt.xlim([0,11])
+plt.xticks(np.arange(0, 12, 1.0))
+plt.grid(True, color='0.9')
+
+plt.axhline(y=0, color='black', linewidth=0.5, linestyle=(0,(5,5)), xmax=10.1/11)
+
+plt.plot(x,sum_shear,color='orange')
+plt.plot(x,shear_dist,color='grey',linestyle=(0,(3,5,1,5)))
+plt.plot(x,inertial_shear,color='grey',linestyle=(0,(3,1,1,1)))
+plt.legend(('Neutral Axis', 'Total Shear', 'Lift Shear', 'Inertial Shear'), loc="lower right")
+
+plt.title('Half-Span Shear Force Distribution', fontweight='bold')
+plt.xlabel('y [m]')
+plt.ylabel('Shear Force [N]')
+
+# Bending Plot
+
+bending = plt.figure(figsize=(10,5))
+
+plt.xlim([0,11])
+plt.xticks(np.arange(0, 12, 1.0))
+plt.grid(True, color='0.9')
+
+plt.axhline(y=0, color='black', linewidth=0.5, linestyle=(0,(5,5)), xmax=10.1/11)
+
+plt.plot(x,sum_moment,color='purple')
+plt.plot(x,bending_dist,color='grey',linestyle=(0,(3,5,1,5)))
+plt.plot(x,inertial_moment,color='grey',linestyle=(0,(3,1,1,1)))
+plt.legend(('Neutral Axis', 'Total Bending Moment', 'Lift Bending Moment', 'Inertial Bending Moment'), loc="upper right")
+
+plt.title('Half-Span Bending Moment Distribution', fontweight='bold')
+plt.xlabel('y [m]')
+plt.ylabel('Bending Moment [Nm]')
+
+# Torsion Plot
+
+torque = plt.figure(figsize=(10,5))
+
+plt.xlim([0,11])
+plt.xticks(np.arange(0, 12, 1.0))
+plt.grid(True, color='0.9')
+
+plt.axhline(y=0, color='black', linewidth=0.5, linestyle=(0,(5,5)), xmax=10.1/11)
+
+plt.plot(x,torque_dist,color='red')
+# plt.plot(x,bending_dist,color='grey',linestyle=(0,(3,5,1,5)))
+# plt.plot(x,inertial_moment,color='grey',linestyle=(0,(3,1,1,1)))
+plt.legend(('Neutral Axis', 'Total Torque'), loc="upper right")
+
+plt.title('Half-Span Torque Distribution', fontweight='bold')
+plt.xlabel('y [m]')
+plt.ylabel('Torque [Nm]')
+
 plt.show()
