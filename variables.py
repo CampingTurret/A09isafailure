@@ -40,8 +40,8 @@ wlt_vol = 0.156
 
 # Structural
 
-wing_vol = 10.192611/2
-m1=1681 # [kg]
+wing_vol = 10.192611/2 # 1 wing
+m1=1681/2 # 1 wing [kg]
 wbx_frac=0.0468521
 fuel_density = 807.5
 
