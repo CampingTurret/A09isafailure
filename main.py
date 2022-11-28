@@ -8,9 +8,6 @@ from matplotlib import pyplot as plt
 from force_dists import *
 from aerodynamic_dist import * #Import interpolated continuous distributions from data
 
-#Vars
-
-
 # Aerodynamic Loading
 
 y=np.linspace(0,10.1,sample)
@@ -59,14 +56,10 @@ inertial_load=fuel_load+structure_load
 inertial_shear=fuel_shear+structure_shear
 inertial_moment=fuel_moment+structure_moment
 
-
-
 # Shear Diagram
 
 x=np.linspace(0,10.1,sample)
 x=np.append(x,10.1)
-
-
 
 shear_dist=getShearDist(y,N_prime,sample)
 #plt.plot(x,shear_dist)
@@ -81,14 +74,17 @@ bending_dist=getBendingDist(y,shear_dist,sample)
 torque_dist=getTorqueDist(y,N_prime,M_prime,sample)
 # plt.plot(x,torque_dist)
 
-#Sum of diagrams
-sum_load= inertial_load - L_prime
-sum_shear= inertial_shear + shear_dist
-sum_moment = inertial_moment + bending_dist
-sum_torque = torque_dist + winglet_m_torque #torque wrong dimention
+print(shear_dist)
 
-plt.plot(x,winglet_m_torque)
-plt.plot(x,sum_torque)
+#Sum of diagrams
+sum_load = inertial_load - L_prime
+sum_shear = inertial_shear + shear_dist
+sum_moment = inertial_moment + bending_dist
+torque_dist[400]+=winglet_m_torque
+
+# sum_torque = torque_dist #torque wrong dimention
+
+plt.plot(x,torque_dist)
 
 # Plotting
 
