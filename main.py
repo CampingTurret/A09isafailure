@@ -82,13 +82,13 @@ torque_dist=getTorqueDist(y,N_prime,M_prime,sample)
 # plt.plot(x,torque_dist)
 
 #Sum of diagrams
-sum_load= inertial_load + L_prime
+sum_load= inertial_load - L_prime
 sum_shear= inertial_shear + shear_dist
 sum_moment = inertial_moment + bending_dist
 sum_torque = torque_dist + winglet_m_torque
 
-
-
+plt.plot(y,inertial_load)
+plt.plot(y,sum_load)
 
 # Plotting
 
