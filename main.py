@@ -8,10 +8,14 @@ from matplotlib import pyplot as plt
 from force_dists import *
 from aerodynamic_dist import * #Import interpolated continuous distributions from data
 
+# Constants
+
+n=1 # Load Factor
+
 # Aerodynamic Loading
 
 y=np.linspace(0,10.1,sample)
-L_prime=force_span(cl_dist,sample,q)
+L_prime=force_span(cl_dist0,sample,q)
 D_prime=force_span(cd_dist,sample,q)
 M_prime=moment_span(cm_dist,sample,q)
 N_prime=normal_span(sample, q, CL_des)
@@ -77,14 +81,15 @@ torque_dist=getTorqueDist(y,N_prime,M_prime,sample)
 print(shear_dist)
 
 #Sum of diagrams
-sum_load = inertial_load - L_prime
-sum_shear = inertial_shear + shear_dist
-sum_moment = inertial_moment + bending_dist
-torque_dist[400]+=winglet_m_torque
+sum_load = n*inertial_load - L_prime #n=400
+sum_shear = n*inertial_shear + shear_dist #n=401 
+sum_moment = n*inertial_moment + bending_dist #n=401
+torque_dist[400]+=n*winglet_m_torque
 
 # sum_torque = torque_dist #torque wrong dimention
 
-plt.plot(x,torque_dist)
+plt.plot(y,L_prime)
+# plt.plot
 
 # Plotting
 
