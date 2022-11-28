@@ -12,7 +12,7 @@ from aerodynamic_dist import * #Import interpolated continuous distributions fro
 # Constants
 
 sf=1.5 # Safety Factor
-nload=1.5*2.609588 # Load Factor
+nload=1.5*(0) # Load Factor
 
 # Aerodynamic Loading
 
@@ -112,10 +112,10 @@ plt.suptitle('Load Factor: '+str(round(nload,3))+'; Dynamic Pressure: '+str(int(
 plt.xlabel('y [m]')
 plt.ylabel('Shear Force [N]')
 
-path=os.path.join('figures',str(round(nload,2))+'-'+str(int(round(q,-1))))
-if os.path.exists(path) != True:
-    os.mkdir('figures/'+str(round(nload,2))+'-'+str(int(round(q,-1))))
-plt.savefig('figures/'+str(round(nload,2))+'-'+str(int(round(q,-1)))+'/shear-'+str(nload)+'-'+str(int(round(q,-1)))+'.jpg')
+path=os.path.join('figures/'+str(round(nload,2))+'-'+str(int(round(q,-1))))
+if os.path.exists(path) == False:
+    os.mkdir(path)
+plt.savefig(path+'/shear-'+str(round(nload,2))+'-'+str(int(round(q,-1)))+'.jpg')
 
 # Bending Plot
 
@@ -139,7 +139,7 @@ plt.suptitle('Load Factor: '+str(round(nload,3))+'; Dynamic Pressure: '+str(int(
 plt.xlabel('y [m]')
 plt.ylabel('Bending Moment [Nm]')
 
-plt.savefig('figures/'+str(nload)+'-'+str(int(round(q,-1)))+'/shear-'+str(nload)+'-'+str(int(round(q,-1)))+'.jpg')
+plt.savefig(path+'/bending-'+str(round(nload,2))+'-'+str(int(round(q,-1)))+'.jpg')
 
 # Torsion Plot
 
@@ -163,6 +163,6 @@ plt.suptitle('Load Factor: '+str(round(nload,3))+'; Dynamic Pressure: '+str(int(
 plt.xlabel('y [m]')
 plt.ylabel('Torque [Nm]')
 
-plt.savefig('figures/'+str(nload)+'-'+str(int(round(q,-1)))+'/shear-'+str(nload)+'-'+str(int(round(q,-1)))+'.jpg')
+plt.savefig(path+'/torque-'+str(round(nload,2))+'-'+str(int(round(q,-1)))+'.jpg')
 
 plt.show()
