@@ -10,7 +10,7 @@ from aerodynamic_dist import * #Import interpolated continuous distributions fro
 
 # Constants
 
-n=1 # Load Factor
+nload=2.609588 # Load Factor
 
 # Aerodynamic Loading
 
@@ -56,9 +56,9 @@ for i in range(sample):
 # print(fuel_load)
 print(structure_shear)
 
-inertial_load=fuel_load+structure_load
-inertial_shear=fuel_shear+structure_shear
-inertial_moment=fuel_moment+structure_moment
+inertial_load=(fuel_load+structure_load)*nload
+inertial_shear=(fuel_shear+structure_shear)*nload
+inertial_moment=(fuel_moment+structure_moment)*nload
 
 # Shear Diagram
 
@@ -78,10 +78,13 @@ torque_dist=getTorqueDist(y,N_prime,M_prime,sample)
 print(shear_dist)
 
 #Sum of diagrams
-sum_load = n*inertial_load - L_prime #n=400
-sum_shear = n*inertial_shear + shear_dist #n=401 
-sum_moment = n*inertial_moment + bending_dist #n=401
-torque_dist[400]+=n*winglet_m_torque
+sum_load = inertial_load - L_prime #n=400
+sum_shear = inertial_shear + shear_dist #n=401 
+sum_moment = inertial_moment + bending_dist #n=401
+torque_dist+=winglet_m_torque*nload
+torque_dist[400]=0
+
+print(torque_dist)
 
 # Plotting
 
@@ -100,9 +103,14 @@ plt.plot(x,shear_dist,color='grey',linestyle=(0,(3,5,1,5)))
 plt.plot(x,inertial_shear,color='grey',linestyle=(0,(3,1,1,1)))
 plt.legend(('Neutral Axis', 'Total Shear', 'Lift Shear', 'Inertial Shear'), loc="lower right")
 
-plt.title('Half-Span Shear Force Distribution', fontweight='bold')
+plt.fill_between(x, sum_shear, step="pre", alpha=0.4, color='orange', hatch='|')
+
+plt.title('Half-Span Shear Force Distribution', fontweight='bold', y=1.05)
+plt.suptitle('Load Factor: '+str(round(nload,3))+'; Dynamic Pressure: '+str(int(round(q,-1)))+' Pa', y=0.92)
 plt.xlabel('y [m]')
 plt.ylabel('Shear Force [N]')
+
+plt.savefig('figures/shear-'+str(nload)+'-'+str(int(round(q,-1)))+'.jpg')
 
 # Bending Plot
 
@@ -119,7 +127,10 @@ plt.plot(x,bending_dist,color='grey',linestyle=(0,(3,5,1,5)))
 plt.plot(x,inertial_moment,color='grey',linestyle=(0,(3,1,1,1)))
 plt.legend(('Neutral Axis', 'Total Bending Moment', 'Lift Bending Moment', 'Inertial Bending Moment'), loc="upper right")
 
-plt.title('Half-Span Bending Moment Distribution', fontweight='bold')
+plt.fill_between(x, sum_moment, step="pre", alpha=0.4, color='purple', hatch='|')
+
+plt.title('Half-Span Bending Moment Distribution', fontweight='bold', y=1.05)
+plt.suptitle('Load Factor: '+str(round(nload,3))+'; Dynamic Pressure: '+str(int(round(q,-1)))+' Pa', y=0.92)
 plt.xlabel('y [m]')
 plt.ylabel('Bending Moment [Nm]')
 
@@ -138,7 +149,10 @@ plt.plot(x,torque_dist,color='red')
 # plt.plot(x,inertial_moment,color='grey',linestyle=(0,(3,1,1,1)))
 plt.legend(('Neutral Axis', 'Total Torque'), loc="upper right")
 
-plt.title('Half-Span Torque Distribution', fontweight='bold')
+plt.fill_between(x, torque_dist, step="pre", alpha=0.4, color='red', hatch='|')
+
+plt.title('Half-Span Torque Distribution', fontweight='bold', y=1.05)
+plt.suptitle('Load Factor: '+str(round(nload,3))+'; Dynamic Pressure: '+str(int(round(q,-1)))+' Pa', y=0.92)
 plt.xlabel('y [m]')
 plt.ylabel('Torque [Nm]')
 
