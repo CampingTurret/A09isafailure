@@ -11,7 +11,7 @@ def getWingletForce(winglet_force):
     ymac_wlt = yMAC(wlt_span,wlt_cr,wlt_ct) # Obtain location of winglet MAC
     wlt_y = b/2*np.cos(np.deg2rad(gamma))+ymac_wlt*np.cos(np.deg2rad(wlt_gamma)) # Obtain location of vertical force component
     wlt_force_y = winglet_force*np.sin(wlt_gamma) # Obtain vertical force components
-    print(wlt_force_y)
+    # print(wlt_force_y)
     
     return wlt_force_y
 
