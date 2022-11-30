@@ -153,8 +153,22 @@ for n in range(399):
 
 v = 10.1/400 * dv
 
+##### Internal Stress
 
+# Bending Mx
 
+sigma_y = (M * h1/2)/I
+sigma_max = round(max(sigma_y)/10**6, 2)
 
-print('Angle of twist is', np.sum(theta), ' [rad]')
-print('Deflection is', np.sum(v), ' [m]')
+# Torsion T
+
+tau = T / (2*enc_area*t)
+tau_max = round(min(tau)/10**6, 2)
+
+print(sigma_y)
+print(I)
+
+print('Angle of twist is', np.sum(theta), '[rad]')
+print('Deflection is', np.sum(v), '[m]')
+print('Maximum normal stress due to bending is',sigma_max,'[MPa]')
+print('Maximum shear stress due to torsion is',tau_max,'[MPa]')
