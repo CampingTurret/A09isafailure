@@ -19,6 +19,10 @@ CL2 = sf*0    #0.133858438               #(float(input("Lift Coefficient C_L [-]
 nload1=sf*2.609587504
 CL1 = sf*0.133858438
 
+y=np.linspace(0,10.1,sample)
+x=np.linspace(0,10.1,sample)
+x=np.append(x,10.1)
+
 print("Calculating loading...\n")
 
 def calcForces(sf,nload,q,CL):
@@ -91,10 +95,10 @@ def calcForces(sf,nload,q,CL):
     torque_dist+=winglet_m_torque*nload
     torque_dist[400]=0
     
-    return sum_load,sum_shear,sum_moment,torque_dist
+    return sum_load,sum_shear,sum_moment,torque_dist,shear_dist,inertial_shear,bending_dist,inertial_moment
 
-sum_load1,sum_shear1,sum_moment1,torque_dist1=calcForces(1.5,nload1,q,CL1)
-sum_load2,sum_shear2,sum_moment2,torque_dist2=calcForces(1.5,nload2,q,CL2)
+sum_load1,sum_shear1,sum_moment1,torque_dist1,lift_shear1,inertial_shear1,lift_moment1,inertial_moment1=calcForces(1.5,nload1,q,CL1)
+sum_load2,sum_shear2,sum_moment2,torque_dist2,lift_shear2,inertial_shear2,lift_moment2,inertial_moment2=calcForces(1.5,nload2,q,CL2)
 
 # Plotting
 
@@ -164,7 +168,7 @@ def plot(x,sum_shear,lift_shear,inertial_shear,sum_moment,lift_moment,inertial_m
     plt.plot(x,sum_torque,color='red')
     # plt.plot(x,bending_dist,color='grey',linestyle=(0,(3,5,1,5)))
     # plt.plot(x,inertial_moment,color='grey',linestyle=(0,(3,1,1,1)))
-    plt.legend(('Neutral Axis', 'Total Torque'), loc="upper right")
+    plt.legend(('Neutral Axis', 'Total Torque'), loc="lower right")
 
     plt.fill_between(x, sum_torque, step="pre", alpha=0.4, color='red', hatch='|')
 
@@ -177,4 +181,5 @@ def plot(x,sum_shear,lift_shear,inertial_shear,sum_moment,lift_moment,inertial_m
 
     plt.show()
     
-# plot(x,sum_shear,shear_dist,inertial_shear,sum_moment,bending_dist,inertial_moment,torque_dist,nload,q)
+plot(x,sum_shear1,lift_shear1,inertial_shear1,sum_moment1,lift_moment1,inertial_moment1,torque_dist1,nload1,q)
+plot(x,sum_shear2,lift_shear2,inertial_shear2,sum_moment2,lift_moment2,inertial_moment2,torque_dist2,nload2,q)
