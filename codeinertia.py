@@ -3,9 +3,13 @@ import scipy as sp
 import math as m
 from scipy import integrate
 
+from main import sum_moment,torque_dist
 
-X1 = float(input("Input first x-coordinate,(X1): "))
-X2 = float(input("Input second x-coordinate,(X2): "))
+sum_moment=sum_moment[0:400]
+torque_dist=torque_dist[0:400]
+
+X1 = float(input("X-coordinate of Leading Spar X1: "))
+X2 = float(input("X-coordinate of Trailing Spar X2: "))
 
 def airfoilparameters(X1, X2):
     data = []
@@ -35,9 +39,10 @@ def airfoilparameters(X1, X2):
 h1, h2, w1, w2, A = airfoilparameters(X1,X2)
 
 y = np.linspace(0.0, 10.1, 400)
-t = float(input("thickness is "))
-n = int(input("number of stringers on up beam "))
-A_stringer = float(input("area of the stringer is "))
+t = float(input("Wingbox Thickness t [m]: "))
+t_spar = float(input("Spar Thickness t_spar [m]: "))
+n = int(input("Number of Stringers: "))
+A_stringer = float(input("Stringer Area [m^2]: "))
 
 cr = 3.44
 b = 20.2
@@ -50,18 +55,20 @@ h_rear = h2 * c
 up_beam = w1 * c
 low_beam = w2 * c
 
+# print(h_front)
+# print(h_rear)
+
 ds = h_front + h_rear + up_beam + low_beam
 enc_area = (h_front + h_rear)/2 * (X2-X1) * c
 J = 4 * (enc_area)**2 * (t / ds)
 
-left_ax = t * h_front * X1 * c
-left_a = t * h_front
-left_ay = t * h_front**2 /2
+left_ax = t_spar * h_front * X1 * c # Centroid stuff
+left_a = t_spar * h_front # Area
+left_ay = t_spar * h_front**2 /2
 
-right_ax = t * h_rear * X2 * c
-right_a = t * h_rear
-right_ay = t * ( ((low_beam**2-((X2-X1)*c)**2)**0.5) + h_rear/2 ) * h_rear
-
+right_ax = t_spar * h_rear * X2 * c
+right_a = t_spar * h_rear
+right_ay = t_spar * ( ((low_beam**2-((X2-X1)*c)**2)**0.5) + h_rear/2 ) * h_rear
 
 top_ax = ((X2-X1)*c/2 + X1*c) * t * up_beam
 top_a = t * up_beam
@@ -71,16 +78,12 @@ bot_ax = ((X2-X1)*c/2 + X1*c) * t * low_beam
 bot_a = t * low_beam
 bot_ay = t * ((low_beam**2-((X2-X1)*c)**2)**0.5)/2*low_beam
 
-
-
-
 sum_ax = left_ax + right_ax + top_ax + bot_ax
 sum_a = left_a + right_a + top_a + bot_a
 sum_ay = left_ay + right_ay + top_ay + bot_ay
 
 x_axis = sum_ax / sum_a
 y_axis = sum_ay / sum_a
-
 
 I_y_bot = 0
 I_y_top = 0
@@ -100,7 +103,6 @@ while m > 0.1 :
     top_dist -= top_stringer_distance
     m = m-1
 
-
 bot_y0 = -y_axis
 bot_slope = ((low_beam**2-((X2-X1)*c)**2)**0.5) / ((X2-X1)*c)
 bot_end = bot_y0 + bot_slope *c
@@ -118,21 +120,21 @@ while l > 0.1 :
 
 I_stringers = I_y_top + I_y_bot
 
-I_wingbox_l = t * h_front**3 /12 + t*h_front * (h_front/2 - y_axis)**2
+I_wingbox_l = t_spar * h_front**3 /12 + t_spar*h_front * (h_front/2 - y_axis)**2
 
-I_wingbox_r = t * h_rear**3 /12 + t*h_rear * (h_rear/2 - y_axis)**2
+I_wingbox_r = t_spar * h_rear**3 /12 + t_spar*h_rear * (h_rear/2 - y_axis)**2
 
-I_wingbox_u = up_beam * t**3 /12 + up_beam * t * ( h_front-((up_beam**2-((X2-X1)*c)**2)**0.5)/2-y_axis)**2
+I_wingbox_u = up_beam * t * ( h_front-((up_beam**2-((X2-X1)*c)**2)**0.5)/2-y_axis)**2
 
-I_wingbox_d = low_beam * t**3 /12 + low_beam * t * ( ((low_beam**2-((X2-X1)*c)**2)**0.5)/2 - y_axis)**2
+I_wingbox_d = low_beam * t * ( ((low_beam**2-((X2-X1)*c)**2)**0.5)/2 - y_axis)**2
 
 I_wingbox = I_wingbox_l + I_wingbox_r + I_wingbox_u + I_wingbox_d
 
 I = I_wingbox + I_stringers
 
-T = 15000
+T = torque_dist
 
-M = 2.2 * 10**6
+M = sum_moment
 
 dtheta = T / (G*J)
 theta = 10.1/400 * dtheta
@@ -149,8 +151,10 @@ for n in range(399):
         dv[n] = dv[n-1] + dvs[n]
         n= n + 1
 
-
 v = 10.1/400 * dv
 
-print('Angle of twist is', np.sum(theta))
-print('Deflection is', np.sum(v))
+
+
+
+print('Angle of twist is', np.sum(theta), ' [rad]')
+print('Deflection is', np.sum(v), ' [m]')
