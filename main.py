@@ -12,8 +12,9 @@ from aerodynamic_dist import * #Import interpolated continuous distributions fro
 # Constants
 
 sf=1.5 # Safety Factor
-nload=1.5*(0) # Load Factor
-CL = 2
+nload=sf*(0) # Load Factor
+CL = sf*0
+
 # Aerodynamic Loading
 
 y=np.linspace(0,10.1,sample)

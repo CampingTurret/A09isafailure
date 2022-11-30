@@ -47,6 +47,6 @@ fuel_density = 807.5
 
 # Load Specific
 
-q=38529.56
+q=38529.56074
 sample=400
 
