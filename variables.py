@@ -49,4 +49,5 @@ fuel_density = 807.5
 
 q=38529.56074
 sample=400
+mach=0.735
 

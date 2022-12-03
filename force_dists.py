@@ -16,7 +16,7 @@ def force_span(dist, sample, q, CL=CL_des):  # Input distribution function, samp
     y = np.linspace(0, 10.1, sample)  # Linear discretization of continuous space
     chord_y = (ct - cr) / (b / 2) * (y) + 3.44  # Chord distribution
     ddist = dist(y, CL)  # Discretized coefficient distribution
-    force_dist = ddist * q * chord_y  # Force distribution
+    force_dist = (ddist * q * chord_y)/(np.sqrt(1-mach**2))  # Force distribution
     return force_dist
 
 
@@ -24,7 +24,7 @@ def moment_span(dist, sample, q, CL=CL_des):  # Input distribution function, sam
     y = np.linspace(0, 10.1, sample)  # Linear discretization of continuous space
     chord_y = (ct - cr) / (b / 2) * (y) + 3.44  # Chord Distribution
     ddist = dist(y, CL)  # Discretized coefficient distribution
-    moment_dist = ddist * q * (chord_y) ** 2  # Moment distribution
+    moment_dist = (ddist * q * (chord_y) ** 2)/(np.sqrt(1-mach**2))  # Moment distribution
     return moment_dist
 
 
@@ -41,7 +41,7 @@ def force_winglet(dist, sample, q, CLd=CL_des):  # Input distribution function, 
     ddist = dist(y+b/2, CLd)  # Discretized coefficient distribution
     # print(ddist)
     force_dist = ddist * q * chord_y  # Force distribution
-    force = np.sum(force_dist) / sample
+    force = (np.sum(force_dist) / sample)/(np.sqrt(1-mach**2))
     return force
 
 
@@ -52,7 +52,7 @@ def moment_winglet(sample, q, CL=CL_des):
     ddist = cm_winglet_dist(y + b / 2, CL_des)  # Discretized coefficient distribution
     # print(ddist)
     moment_dist = ddist * q * chord_y**2  # Moment distribution
-    moment = np.sum(moment_dist) / sample
+    moment = (np.sum(moment_dist) / sample)/(np.sqrt(1-mach**2))
     momenty = moment * np.cos(np.radians(50))  # moment around y-axis (pitch up/down)
     return momenty
 
