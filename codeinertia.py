@@ -57,6 +57,11 @@ h_rear = h2 * c
 up_beam = w1 * c
 low_beam = w2 * c
 
+area = (h_front+h_rear)*t_spar+(up_beam+low_beam)*t+A_stringer*n
+volume = 2*(np.trapz(area,y)) # Full span volume
+print("\nStructure Volume:",str(volume),"[m^3]")
+print("Structure Weight:",str(volume*2800),"[kg]\n")
+
 # print(h_front)
 # print(h_rear)
 
