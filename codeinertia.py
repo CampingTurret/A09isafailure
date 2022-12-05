@@ -3,8 +3,10 @@ import scipy as sp
 import math as m
 from scipy import integrate
 
-from main import sum_moment1,torque_dist1,sum_moment2,torque_dist2
+from main import sum_shear1,sum_moment1,torque_dist1,sum_shear2,sum_moment2,torque_dist2
 
+sum_shear1=sum_shear1[0:400]
+sum_shear2=sum_shear2[0:400]
 sum_moment1=sum_moment1[0:400]
 torque_dist1=torque_dist1[0:400]
 sum_moment2=sum_moment2[0:400]
@@ -57,17 +59,21 @@ h_rear = h2 * c
 up_beam = w1 * c
 low_beam = w2 * c
 
+l_top=w1*c
+l_bot=w2*c
+
+area_skin = (h_front+h_rear)*t_spar+(up_beam+low_beam)*t
 area = (h_front+h_rear)*t_spar+(up_beam+low_beam)*t+A_stringer*n
 volume = 2*(np.trapz(area,y)) # Full span volume
 print("\nStructure Volume:",str(volume),"[m^3]")
-print("Structure Weight:",str(volume*2800),"[kg]\n")
+print("Structure Weight:",str(volume*2700),"[kg]\n")
 
 # print(h_front)
 # print(h_rear)
 
 ds = h_front + h_rear + up_beam + low_beam
 enc_area = (h_front + h_rear)/2 * (X2-X1) * c
-J = 4 * (enc_area)**2 * (t / ds)
+J = 4 * (enc_area)**2 / (h_front/t_spar + h_rear/t_spar + up_beam/t + low_beam/t)
 
 left_ax = t_spar * h_front * X1 * c # Centroid stuff
 left_a = t_spar * h_front # Area
@@ -91,6 +97,14 @@ sum_ay = left_ay + right_ay + top_ay + bot_ay
 
 x_axis = sum_ax / sum_a
 y_axis = sum_ay / sum_a
+
+x_ctr = (x_axis/c)[0]
+y_ctr = (y_axis/c)[0]
+
+# print(x_ctr)
+# print(y_ctr)
+
+# print(x_axis)
 
 I_y_bot = 0
 I_y_top = 0
@@ -117,6 +131,9 @@ bot_stringer_distance = (bot_y0 - bot_end) /(n-1)
 
 bot_dist = bot_y0
 
+# print(bot_y0)
+# print("\n")
+
 l = n
 while l > 0.1 :
     I_stringer_bot = A_stringer * bot_dist**2
@@ -139,6 +156,8 @@ I_wingbox = I_wingbox_l + I_wingbox_r + I_wingbox_u + I_wingbox_d
 
 I = I_wingbox + I_stringers
 
+V1 = sum_shear1
+V2 = sum_shear2
 T1 = torque_dist1
 T2 = torque_dist2
 M1 = sum_moment1
@@ -165,11 +184,151 @@ def mov(T,M):
     
     return theta,v
 
+# def vstress(V):
+    
+    up_y0= h_front-y_axis
+    low_y0= -y_axis
+    
+    Bc=area_skin/4
+    Bs=A_stringer
+    
+    a_dist = np.zeros((400,n+2))
+    
+    a_dist[:,0]=Bc
+    a_dist[:,n+1]=Bc
+    
+    for i in range(n):
+        a_dist[:,i+1]=Bs
+        
+    # print(a_dist)
+    
+    up_end = up_y0+(X2-X1)*c*top_slope
+    bot_end = low_y0+(X2-X1)*c*bot_slope
+    
+    y_loc_top = np.linspace(up_y0,up_end,n+2)
+    y_loc_top = y_loc_top.transpose()
+    y_loc_bot = np.linspace(low_y0,bot_end,n+2)
+    y_loc_bot = y_loc_bot.transpose()
+    
+    top_sum=np.sum((y_loc_top*a_dist),axis=1)
+    bot_sum=np.sum((y_loc_bot*a_dist),axis=1)
+    
+    funcsum = top_sum+bot_sum
+    k=-(V/I)
+    
+    qb = k*funcsum
+    
+    print(qb)
+    
+    return
+
+# def qshear(V):
+    
+    # Geometric Calculations
+    up_y0 = h_front - y_axis
+    low_y0 = -y_axis
+    
+    upsl = np.tan(top_slope)
+    dnsl = np.tan(bot_slope)
+    
+    n_up_y0 = up_y0+(x_axis-X1*c)*upsl
+    n_low_y0 = low_y0+(x_axis-X1*c)*bot_slope
+    
+    up_end = up_y0+(X2-X1)*c*top_slope
+    bot_end = low_y0+(X2-X1)*c*bot_slope
+    
+    # Calculating qb
+    
+    int1 = (X1*c-x_axis)*(low_y0-up_y0)*t_spar
+    int2 = 0.5*bot_slope*((x_axis-X1*c)**2+(X2*c-x_axis)**2)*t
+    int3 = (X2*c-x_axis)*(up_y0-low_y0)*t_spar
+    int4 = 0.5*top_slope*((X2*c-x_axis)**2+(x_axis-X1*c)**2)*t
+    
+    sum_int=int1+int2+int3+int4
+    k=-(V/I)
+    qb=k*sum_int
+    
+    # Calculating qs - cut at top left corner
+    
+    r2 = h_front
+    r3 = (X2-X1)*c
+    
+    q2=k*int2
+    q3=k*int3
+    
+    qs = (r2*q2+r3*q3)/(-2*enc_area)
+    
+    # print(qs)
+    
+    q=qb+qs 
+    # print(q)
+    
+    return q
+
+def fq1(s,k):
+    f=k*t_spar*((s)**2)/2
+    return f
+
+def fq2(s,k):
+    f=k*t*(h_front/2*s-(s**2)/2*(h_front/2-h_rear/2)/w1)
+    return f
+
+def fq3(s,k,q2):
+    f=k*t_spar*(h_rear/2*s-(s**2)/2)+q2
+    return f
+
+def qshear(V):
+    
+    k=-(V/I)
+    
+    q01=fq1(h_front/2,k)
+    q12=fq2(w1,k)
+    q23=fq3(0,k,q12)
+    
+    # print(q12)
+    
+    int1=np.zeros(400)
+    int2=np.zeros(400)
+    int3=np.zeros(400)
+    
+    for i in range(400): # Calculate qs0
+        int1[i]=sp.integrate.quad(lambda s: k[i]*t_spar*(s**2)/2*(x_axis[i]-X1*c[i]),0,h_front[i]/2)[0]
+        
+        h1=h_front[i]/2-(h_front[i]/2-h_rear[i]/2)/((X2-X1)*c[i])*(x_axis[i]-X1*c[i])
+        int2[i]=sp.integrate.quad(lambda s: k[i]*t*((h_front[i]/2)*s-(s**2)/2*((h_front[i]/2-h_rear[i]/2)/l_top[i]))*h1*(X2-X1)*c[i]/l_top[i],0,l_top[i])[0]
+        
+        int3[i]=sp.integrate.quad(lambda s: k[i]*t_spar*(h_rear[i]/2*s-(s**2)/2)+q12[i],0,h_rear[i]/2)[0]
+    
+    qs0=-2*(int1+int2+int3)/enc_area
+    
+    qa = q01+qs0
+    qb = q12+qs0
+    qc = q23+qs0
+    
+    # print(qa)
+    # print(qb)
+    # print("\n")
+    
+    qa_max=max(abs(qa))
+    qb_max=max(abs(qb))
+    
+    q=(max(qa_max,qb_max))
+    
+    return q
+
+q1=qshear(V1)
+q2=qshear(V2)
+
 theta1,v1=mov(T1,M1)
 
 theta2,v2=mov(T2,M2)
 
 ##### Internal Stresses
+
+# Shear V
+
+vtau1 = q1/(min(t,t_spar))/10**6
+vtau2 = q2/(min(t,t_spar))/10**6
 
 # Bending Mx
 
@@ -182,13 +341,10 @@ sigma_max2 = round(max(sigma_y2)/10**6, 2)
 # Torsion T
 
 tau1 = T1 / (2*enc_area*t)
-tau_max1 = round(min(tau1)/10**6, 2)
+tau_max1 = round(min(tau1)/10**6, 2)-vtau1
 
 tau2 = T2 / (2*enc_area*t)
-tau_max2 = round(min(tau2)/10**6, 2)
-
-# print(sigma_y)
-# print(I)
+tau_max2 = round(min(tau2)/10**6, 2)-vtau2
 
 print("### Bending Limiting ###\n")
 
@@ -196,10 +352,12 @@ print('Angle of twist is', np.sum(theta1), '[rad]')
 print('Deflection is', np.sum(v1), '[m]')
 print('Maximum normal stress due to bending is',sigma_max1,'[MPa]')
 print('Maximum shear stress due to torsion is',tau_max1,'[MPa]\n')
+print('Tau contribution due to shear: ',-1*vtau1,'[MPa]')
 
 print("### Torsion Limiting ###\n")
 
 print('Angle of twist is', np.sum(theta2), '[rad]')
 print('Deflection is', np.sum(v2), '[m]')
 print('Maximum normal stress due to bending is',sigma_max2,'[MPa]')
-print('Maximum shear stress due to torsion is',tau_max2,'[MPa]')
+print('Maximum shear stress due to torsion is',tau_max2,'[MPa]\n')
+print('Tau contribution due to shear: ',-1*vtau2,'[MPa]\n')
