@@ -30,7 +30,7 @@ def fuelshear(p,g,A,Cr,b,labda,y):
 def fuelmoment(p,g,A,Cr,b,labda,y): 
     ratio = 1 - labda
     c1 = b/6 *(labda * labda + labda + 1)
-    c2 = b * b *(ratio*ratio/48 - ratio/12 + 1/8 -(labda*labda+labda+1)/12)
+    c2 = b * b *(-3*labda*labda -2*labda -1)/48
     V = p * g * A * Cr * Cr *(-4/(12*b*b)*ratio * ratio * y * y * y*y +2/(3*b) * ratio * y * y *y - 0.5* y*y + c1*y + c2)
     return V
 
