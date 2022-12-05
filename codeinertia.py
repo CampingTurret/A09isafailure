@@ -184,7 +184,7 @@ def mov(T,M):
     
     return theta,v
 
-# def vstress(V):
+# def vstress(V): # DEPRECATED
     
     up_y0= h_front-y_axis
     low_y0= -y_axis
