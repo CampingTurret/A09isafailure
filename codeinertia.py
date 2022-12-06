@@ -388,61 +388,65 @@ print('Maximum normal stress due to bending is',sigma_max3,'[MPa]')
 print('Maximum shear stress due to torsion is',tau_max3,'[MPa]\n')
 print('Tau contribution due to shear: ',-1*vtau3,'[MPa]\n')
 
+def movPlot(v,theta,lc,design):
 
+    deflection = np.linspace(0.0, 10.1, 400)
+    for i in range(y.size):
 
+        deflection[i] = np.sum(v[0:i])
 
-deflection = np.linspace(0.0, 10.1, 400)
-for i in range(y.size):
+    deflection=deflection*-1
 
-    deflection[i] = np.sum(v1[0:i])
+    twist = np.linspace(0.0, 10.1, 400)
+    for i in range(y.size):
 
+        twist[i] = np.sum(theta[0:i])
 
-twist = np.linspace(0.0, 10.1, 400)
+    twist=twist*180/np.pi
 
-for i in range(y.size):
+    fig, ax1 = plt.subplots(figsize=(10,5))
+    ax2 = ax1.twinx()
 
-    twist[i] = np.sum(theta3[0:i])
+    plt.xlim([0,11])
+    plt.xticks(np.arange(0, 12, 1.0))
+    plt.grid(True, color='0.9')
+    
+    ax1.axhline(y=0, color='black', linewidth=0.5, linestyle=(0,(5,5)), xmax=10.1/11)
+    
+    lns1 = ax1.plot(y,deflection,color='black',label='Deflection [m]')
+    lns2 = ax2.plot(y,twist,color='orange',label='Twist [deg]')
+    lns = lns1+lns2
+    labs = [l.get_label() for l in lns]
+    ax1.legend(lns, labs, loc="upper right")
 
+    ax1.set_ylim([-0.5,4])
+    ax2.set_ylim([-10,0.5])
+    ax1.set_xlabel('y [m]')
+    ax1.set_ylabel('deflection [m]')
+    ax2.set_ylabel('twist [deg]')
+    
+    # ax1.legend(('Deflection [m]'), loc="lower left")
+    # ax2.legend(('Twist [deg]'), loc="lower right")
 
-defor = plt.figure(figsize=(10,5))
+    plt.title('Deflection and Twist of Design '+str(design)+' Under LC'+str(lc), fontweight='bold', y=1.05)
 
-plt.xlim([0,11])
-plt.xticks(np.arange(0, 12, 1.0))
-plt.grid(True, color='0.9')
-plt.axhline(y=0, color='black', linewidth=0.5, linestyle=(0,(5,5)), xmax=10.1/11)
-
-plt.plot(y,deflection,color='orange')
-plt.fill_between(y, deflection, step="pre", alpha=0.4, color='orange', hatch='|')
-
-plt.title('Half-Span deflection', fontweight='bold', y=1.05)
-plt.xlabel('y [m]')
-plt.ylabel('deflection [m]')
-
-path=os.path.join('figures/deflection')
-if os.path.exists(path) == False:
+    path=os.path.join('figures/deflections/design'+str(design)+'/')
+    if os.path.exists(path) == False:
         os.mkdir(path)
-plt.savefig(path+'/deflection'+'.jpg')
+    plt.savefig(path+'/design'+str(design)+'lc'+str(lc)+'.jpg')
 
+    # twi = plt.figure(figsize=(10,5))
+    
+movPlot(v1,theta1,26,3)
+movPlot(v2,theta2,18,3)
+movPlot(v3,theta3,15,3)
 
-twi = plt.figure(figsize=(10,5))
-
-plt.xlim([0,11])
-plt.xticks(np.arange(0, 12, 1.0))
-plt.grid(True, color='0.9')
-plt.axhline(y=0, color='black', linewidth=0.5, linestyle=(0,(5,5)), xmax=10.1/11)
-
-plt.plot(y,twist,color='orange')
-plt.fill_between(y, twist, step="pre", alpha=0.4, color='orange', hatch='|')
-
-plt.title('Half-Span twist', fontweight='bold', y=1.05)
-plt.xlabel('y [m]')
-plt.ylabel('twist [rad]')
-
-path=os.path.join('figures/twist')
-if os.path.exists(path) == False:
-        os.mkdir(path)
-plt.savefig(path+'/twist'+'.jpg')
-
+'''
+Second value in each function is the loading case, third value in each is the design number.
+Don't touch the loading case numbers, they are in a different order from the document (18 and 15 switched in the code).
+Order running from main: 26-18-15
+Change the design number depending on what geometric values you are inputting.
+'''
 
 
 
