@@ -1,6 +1,8 @@
 import numpy as np
 import scipy as sp
 import math as m
+import os
+from matplotlib import pyplot as plt
 from scipy import integrate
 
 from main import sum_shear1,sum_moment1,torque_dist1,sum_shear2,sum_moment2,torque_dist2,sum_shear3,sum_moment3,torque_dist3
@@ -385,3 +387,67 @@ print('Deflection is', np.sum(v3), '[m]')
 print('Maximum normal stress due to bending is',sigma_max3,'[MPa]')
 print('Maximum shear stress due to torsion is',tau_max3,'[MPa]\n')
 print('Tau contribution due to shear: ',-1*vtau3,'[MPa]\n')
+
+
+
+
+deflection = np.linspace(0.0, 10.1, 400)
+for i in range(y.size):
+
+    deflection[i] = np.sum(v1[0:i])
+
+
+twist = np.linspace(0.0, 10.1, 400)
+
+for i in range(y.size):
+
+    twist[i] = np.sum(theta3[0:i])
+
+
+defor = plt.figure(figsize=(10,5))
+
+plt.xlim([0,11])
+plt.xticks(np.arange(0, 12, 1.0))
+plt.grid(True, color='0.9')
+plt.axhline(y=0, color='black', linewidth=0.5, linestyle=(0,(5,5)), xmax=10.1/11)
+
+plt.plot(y,deflection,color='orange')
+plt.fill_between(y, deflection, step="pre", alpha=0.4, color='orange', hatch='|')
+
+plt.title('Half-Span deflection', fontweight='bold', y=1.05)
+plt.xlabel('y [m]')
+plt.ylabel('deflection [m]')
+
+path=os.path.join('figures/deflection')
+if os.path.exists(path) == False:
+        os.mkdir(path)
+plt.savefig(path+'/deflection'+'.jpg')
+
+
+twi = plt.figure(figsize=(10,5))
+
+plt.xlim([0,11])
+plt.xticks(np.arange(0, 12, 1.0))
+plt.grid(True, color='0.9')
+plt.axhline(y=0, color='black', linewidth=0.5, linestyle=(0,(5,5)), xmax=10.1/11)
+
+plt.plot(y,twist,color='orange')
+plt.fill_between(y, twist, step="pre", alpha=0.4, color='orange', hatch='|')
+
+plt.title('Half-Span twist', fontweight='bold', y=1.05)
+plt.xlabel('y [m]')
+plt.ylabel('twist [rad]')
+
+path=os.path.join('figures/twist')
+if os.path.exists(path) == False:
+        os.mkdir(path)
+plt.savefig(path+'/twist'+'.jpg')
+
+
+
+
+
+    
+    
+
+
