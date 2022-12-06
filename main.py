@@ -14,14 +14,14 @@ from aerodynamic_dist import * #Import interpolated continuous distributions fro
 sf=1.5 # Safety Factor
 
 nload1=sf*2.609587504
-CL1 = sf*0.133858438
+CL1 = sf*0.147668144
 
 nload2=sf*0   #2.609587504              # (float(input("Load Factor [-]: "))) # Load Factor
 CL2 = sf*0    #0.133858438               #(float(input("Lift Coefficient C_L [-]: "))) # CL
 
 q3=24658.91887
 nload3=sf*-1
-CL3 = sf*-0.080148226
+CL3 = sf*-0.137881146
 
 y=np.linspace(0,10.1,sample)
 x=np.linspace(0,10.1,sample)
@@ -194,6 +194,6 @@ def plot(x,sum_shear,lift_shear,inertial_shear,sum_moment,lift_moment,inertial_m
 
     plt.show()
     
-plot(x,sum_shear1,lift_shear1,inertial_shear1,sum_moment1,lift_moment1,inertial_moment1,torque_dist1,nload1,q)
-plot(x,sum_shear2,lift_shear2,inertial_shear2,sum_moment2,lift_moment2,inertial_moment2,torque_dist2,nload2,q)
-plot(x,sum_shear3,lift_shear3,inertial_shear3,sum_moment3,lift_moment3,inertial_moment3,torque_dist3,nload3,q3)
+# plot(x,sum_shear1,lift_shear1,inertial_shear1,sum_moment1,lift_moment1,inertial_moment1,torque_dist1,nload1,q)
+# plot(x,sum_shear2,lift_shear2,inertial_shear2,sum_moment2,lift_moment2,inertial_moment2,torque_dist2,nload2,q)
+# plot(x,sum_shear3,lift_shear3,inertial_shear3,sum_moment3,lift_moment3,inertial_moment3,torque_dist3,nload3,q3)

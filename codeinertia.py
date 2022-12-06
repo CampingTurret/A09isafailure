@@ -3,14 +3,19 @@ import scipy as sp
 import math as m
 from scipy import integrate
 
-from main import sum_shear1,sum_moment1,torque_dist1,sum_shear2,sum_moment2,torque_dist2
+from main import sum_shear1,sum_moment1,torque_dist1,sum_shear2,sum_moment2,torque_dist2,sum_shear3,sum_moment3,torque_dist3
 
 sum_shear1=sum_shear1[0:400]
 sum_shear2=sum_shear2[0:400]
+sum_shear3=sum_shear3[0:400]
+
 sum_moment1=sum_moment1[0:400]
-torque_dist1=torque_dist1[0:400]
 sum_moment2=sum_moment2[0:400]
+sum_moment3=sum_moment3[0:400]
+
+torque_dist1=torque_dist1[0:400]
 torque_dist2=torque_dist2[0:400]
+torque_dist3=torque_dist3[0:400]
 
 X1 = 0.2      # float(input("X-coordinate of Leading Spar X1: "))
 X2 = 0.75      # float(input("X-coordinate of Trailing Spar X2: "))
@@ -158,10 +163,13 @@ I = I_wingbox + I_stringers
 
 V1 = sum_shear1
 V2 = sum_shear2
+V3 = sum_shear3
 T1 = torque_dist1
 T2 = torque_dist2
+T3 = torque_dist3
 M1 = sum_moment1
 M2 = sum_moment2
+M3 = sum_moment3
 
 def mov(T,M):
 
@@ -318,10 +326,11 @@ def qshear(V):
 
 q1=qshear(V1)
 q2=qshear(V2)
+q3=qshear(V3)
 
 theta1,v1=mov(T1,M1)
-
 theta2,v2=mov(T2,M2)
+theta3,v3=mov(T3,M3)
 
 ##### Internal Stresses
 
@@ -329,6 +338,7 @@ theta2,v2=mov(T2,M2)
 
 vtau1 = q1/(min(t,t_spar))/10**6
 vtau2 = q2/(min(t,t_spar))/10**6
+vtau3 = q3/(min(t,t_spar))/10**6
 
 # Bending Mx
 
@@ -338,6 +348,9 @@ sigma_max1 = round(max(sigma_y1)/10**6, 2)
 sigma_y2 = (M2 * h1/2)/I
 sigma_max2 = round(max(sigma_y2)/10**6, 2)
 
+sigma_y3 = (M3 * h1/2)/I
+sigma_max3 = round(max(sigma_y3)/10**6, 2)
+
 # Torsion T
 
 tau1 = T1 / (2*enc_area*t)
@@ -346,18 +359,29 @@ tau_max1 = round(min(tau1)/10**6, 2)-vtau1
 tau2 = T2 / (2*enc_area*t)
 tau_max2 = round(min(tau2)/10**6, 2)-vtau2
 
-print("### Bending Limiting ###\n")
+tau3 = T3 / (2*enc_area*t)
+tau_max3 = round(min(tau3)/10**6, 2)-vtau3
+
+print("### Positive - Bending Limiting ###\n")
 
 print('Angle of twist is', np.sum(theta1), '[rad]')
 print('Deflection is', np.sum(v1), '[m]')
 print('Maximum normal stress due to bending is',sigma_max1,'[MPa]')
 print('Maximum shear stress due to torsion is',tau_max1,'[MPa]\n')
-print('Tau contribution due to shear: ',-1*vtau1,'[MPa]')
+print('Tau contribution due to shear: ',-1*vtau1,'[MPa]\n')
 
-print("### Torsion Limiting ###\n")
+print("### Zero - Torsion Limiting ###\n")
 
 print('Angle of twist is', np.sum(theta2), '[rad]')
 print('Deflection is', np.sum(v2), '[m]')
 print('Maximum normal stress due to bending is',sigma_max2,'[MPa]')
 print('Maximum shear stress due to torsion is',tau_max2,'[MPa]\n')
 print('Tau contribution due to shear: ',-1*vtau2,'[MPa]\n')
+
+print("### Negative ###\n")
+
+print('Angle of twist is', np.sum(theta3), '[rad]')
+print('Deflection is', np.sum(v3), '[m]')
+print('Maximum normal stress due to bending is',sigma_max3,'[MPa]')
+print('Maximum shear stress due to torsion is',tau_max3,'[MPa]\n')
+print('Tau contribution due to shear: ',-1*vtau3,'[MPa]\n')
