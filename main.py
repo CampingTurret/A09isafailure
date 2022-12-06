@@ -43,7 +43,7 @@ def calcForces(sf,nload,q,CL):
 
     # plt.plot(np.linspace(0, 10.1, sample), L_prime)
     # plt.plot(np.linspace(0, 10.1, sample), D_prime)
-    plt.plot(np.linspace(0, 10.1, sample), N_prime)
+    # plt.plot(np.linspace(0, 10.1, sample), N_prime)
     # plt.plot(np.linspace(0, 10.1 ,sample), M_prime)
 
     # Inertial Loading
