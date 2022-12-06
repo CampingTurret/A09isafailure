@@ -130,7 +130,7 @@ def plot(x,sum_shear,lift_shear,inertial_shear,sum_moment,lift_moment,inertial_m
     plt.plot(x,sum_shear,color='orange')
     plt.plot(x,lift_shear,color='grey',linestyle=(0,(3,5,1,5)))
     plt.plot(x,inertial_shear,color='grey',linestyle=(0,(3,1,1,1)))
-    plt.legend(('Neutral Axis', 'Total Shear', 'Lift Shear', 'Inertial Shear'), loc="lower right")
+    plt.legend(('Neutral Axis', 'Total Shear', 'Lift Shear', 'Inertial Shear'), loc="upper right")
 
     plt.fill_between(x, sum_shear, step="pre", alpha=0.4, color='orange', hatch='|')
 
@@ -194,6 +194,7 @@ def plot(x,sum_shear,lift_shear,inertial_shear,sum_moment,lift_moment,inertial_m
 
     plt.show()
     
+plt.show()
 # plot(x,sum_shear1,lift_shear1,inertial_shear1,sum_moment1,lift_moment1,inertial_moment1,torque_dist1,nload1,q)
 # plot(x,sum_shear2,lift_shear2,inertial_shear2,sum_moment2,lift_moment2,inertial_moment2,torque_dist2,nload2,q)
 # plot(x,sum_shear3,lift_shear3,inertial_shear3,sum_moment3,lift_moment3,inertial_moment3,torque_dist3,nload3,q3)
