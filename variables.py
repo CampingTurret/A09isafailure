@@ -1,3 +1,6 @@
+# Wing Specific
+
+g=9.81
 M_TO = 16842  # [kg]
 W_TO = 165164  # [N]
 WS = 3400  # [-]
@@ -33,8 +36,18 @@ wlt_ct = 0.5 # [m]
 wlt_gamma = 0.8727 # [rad], includes wing dihedral
 wlt_le_offset = 0.515 # [m]
 wlt_taper = wlt_ct/wlt_cr
+wlt_vol = 0.156
+
+# Structural
+
+wing_vol = 10.192611/2 # 1 wing
+m1=1681/2 # 1 wing [kg]
+wbx_frac=0.0468521
+fuel_density = 807.5
 
 # Load Specific
 
-q=7000
+q=38529.56074
 sample=400
+mach=0.735
+

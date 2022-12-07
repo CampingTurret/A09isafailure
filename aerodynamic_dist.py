@@ -8,7 +8,7 @@ from variables import b as b_real
 
 # Winglet stuff on bottom of file
 
-b = b_real - 0.01  # [m]
+b = b_real  # [m]
 # Wing lift coefficients
 CL0 = 0.367020  # Wing lift coefficient at AoA = 0
 CL10 = 1.221274  # Wing lift coefficient at AoA = 10
@@ -127,8 +127,8 @@ def cm_dist(y, CLd=CL_des):
     Cm_dist = cm_dist0(y) + lift_factor(CLd) * (cm_dist1(y) - cm_dist0(y))
     return Cm_dist
 
-
-# x = np.linspace(0, b/2, 100)
+# print(cl_dist(np.linspace(0, b/2, 400)))
+# x = np.linspace(0, b/2, 400)
 # plt.plot(x, cd_dist(x, CL0))
 # plt.plot(x, cd_dist(x, CL10))
 # plt.plot(x, cd_dist(x))
@@ -228,7 +228,7 @@ def cm_winglet_dist(y, CLd=CL_des):
     Cm_dist = cm_winglet_dist0(y) + lift_factor(CLd) * (cm_winglet_dist1(y) - cm_winglet_dist0(y))
     return Cm_dist
 
-print(cm_winglet_dist(0))
+# print(cm_winglet_dist(0))
 # y = np.linspace(b/2, b/2+1.4, 400)
 # print(cd_winglet_dist(y))
 

@@ -1,8 +1,9 @@
 import math
+from pickletools import float8
 import scipy as sc
 import scipy.integrate as integrate
 import numpy as np
-import pandas
+# import pandas
 
 def fuelvolume(A,Cr,b,labda):
     V = A*Cr*Cr*b*(labda*labda + labda + 1)/3
@@ -23,29 +24,26 @@ def fuelshear(p,g,A,Cr,b,labda,y):
     c1 = b/6 *(labda * labda + labda + 1)
     ratio = 1 - labda
     V = p * g * A * Cr * Cr *(-4/(3*b*b)*ratio * ratio * y * y * y +2/b * ratio * y * y - y + c1)
-    return 
-
-
-def fuelmomenent(p,g,A,Cr,b,labda,y): 
-    ratio = 1 - labda
-    c1 = b/6 *(labda * labda + labda + 1)
-    c2 = b * b *(ratio*ratio/48 - ratio/12 + 1/8 -(labda*labda+labda+1)/12)
-    V = p * g * A * Cr * Cr *(-4/(12*b*b)*ratio * ratio * y * y * y*y +2/(3*b) * ratio * y * y *y - 0.5* y*y + c1*y + c2)
     return V
 
 
-
+def fuelmoment(p,g,A,Cr,b,labda,y): 
+    ratio = 1 - labda
+    c1 = b/6 *(labda * labda + labda + 1)
+    c2 = b * b *(-3*labda*labda -2*labda -1)/48
+    V = p * g * A * Cr * Cr *(-4/(12*b*b)*ratio * ratio * y * y * y*y +2/(3*b) * ratio * y * y *y - 0.5* y*y + c1*y + c2)
+    return V
 
 def structureArea(y, array, Cr, b, labda):
     a = array
 
-    for q in range(a.ndim):
-        bound1 = a[0,q]
-        bound2 = a[1,q]
+    for q in range(a.shape[0]):
+        bound1 = a[q,0]
+        bound2 = a[q,1]
         if bound1 < y:
             if bound2 >= y:
 
-                t = a[2,q]
+                t = a[q,2]
 
                 c = Cr - Cr * (1-labda) * 2* y / b
 
@@ -63,11 +61,13 @@ def structureArea(y, array, Cr, b, labda):
     print("ERROR OUT OF BOUNDS")
     return 0
 
-
-
 def structureloading(y, array, p, g, Cr, b, labda ):
     a = array
-    for q in range(a.shape[1]):
+    if y == 0:
+        return 0
+    elif y == 10.1:
+        return 0
+    for q in range(a.shape[0]):
         bound1 = a[q,0]
         bound2 = a[q,1]
         if bound1 < y:
@@ -87,8 +87,8 @@ def structureloading(y, array, p, g, Cr, b, labda ):
                 
                 W = area * p * g
                 return W
-
-    print("ERROR OUT OF BOUNDS")
+    
+    print("ERROR OUT OF BOUNDS" + "Y =" + str(y) + "Returned 0" + "if alone ignore")
     return 0
 
 
@@ -114,14 +114,14 @@ def generatearray(b):
     #builds a constant array for use in the structure
     middlepoint = b/4
 
-    a = np.array([[0,middlepoint,0.01],[middlepoint,b/2,0.01]])
+    a = np.array([[0,middlepoint,0.01],[middlepoint,b/2 + 0.0001,0.01]])
 
     return a
 
 
 def structureshear(y, array, p, g, Cr, b, labda, m2):
     
-    V = -integrate.quad(structureloading,0,y, args=(array,p,g,Cr,b,labda))[0] - integrate.quad(structureloading,0,b/2, args=(array,p,g,Cr,b,labda))[0] + m2 *g
+    V = - integrate.quad(structureloading,0,y, args=(array,p,g,Cr,b,labda))[0] + integrate.quad(structureloading,0,b/2, args=(array,p,g,Cr,b,labda))[0] + m2 *g
 
     return V
 

@@ -15,12 +15,16 @@ def getWingletForce(winglet_force):
     
     return wlt_force_y
 
-def getWingletMoment(winglet_force): # Calculate Moment due to Winglet
+def getWingletMoment(y,winglet_force): # Calculate Moment due to Winglet
     
     ymac_wlt = yMAC(wlt_span,wlt_cr,wlt_ct) # Obtain location of winglet MAC
     
-    wlt_z = b/2*np.sin(np.deg2rad(gamma))+ymac_wlt*np.sin(np.deg2rad(wlt_gamma)) # Obtain z and y moment arm lengths
-    wlt_y = b/2*np.cos(np.deg2rad(gamma))+ymac_wlt*np.cos(np.deg2rad(wlt_gamma))
+    winglet_moment = np.zeros(sample+1)
+    
+    wlt_z = (b/2-y*np.sin(np.deg2rad(gamma)))*np.sin(np.deg2rad(gamma))+ymac_wlt*np.sin(np.deg2rad(wlt_gamma)) # Obtain z and y moment arm lengths
+    wlt_y = (b/2-y*np.cos(np.deg2rad(gamma)))*np.cos(np.deg2rad(gamma))+ymac_wlt*np.cos(np.deg2rad(wlt_gamma))
+    
+    # print
     
     wlt_force_z = winglet_force*np.cos(wlt_gamma)  
     wlt_force_y = winglet_force*np.sin(wlt_gamma)
@@ -72,12 +76,14 @@ def getShearDist(y,dist,sample): # Obtains the shear distribution of the wing
 def getBendingDist(y,dist,sample): # Obtains the bending distribution of the wing
     
     bend_dist=np.zeros(sample+1) # Creates array
-    winglet_moment = getWingletMoment(winglet_force)
+    winglet_moment = getWingletMoment(y, winglet_force)
+    # winglet_moment[400]=0
     i=0
     for i in range(sample): # Numerical integration for each point in data (Bounds: [x,L])
-        bend_dist[i]=-sp.trapz(dist[i:(sample-2)],y[i:(sample-2)])+winglet_moment
+        bend_dist[i]=-sp.trapz(dist[i:(sample-2)],y[i:(sample-2)])+winglet_moment[i]
         # print(sp.trapz(y[i:(sample-1)],dist[i:(sample-1)]))
         bend_dist[400]=0
+    # bend_dist+=winglet_moment
     return bend_dist
 
 def getTorqueDist(y,ldist,mdist,sample):
