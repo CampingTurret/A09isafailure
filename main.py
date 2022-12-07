@@ -29,7 +29,7 @@ x=np.append(x,10.1)
 
 print("Calculating loading...\n")
 
-def calcForces(sf,nload,q,CL):
+def calcForces(sf,nload,q,CL,fuel):
 
     # Aerodynamic Loading
 
@@ -72,7 +72,7 @@ def calcForces(sf,nload,q,CL):
         structure_shear[i]=structureshear(y[i],a,structure_density,g,cr,b,taper,wlt_weight)
         structure_moment[i]=structureMoment(y[i],a,structure_density,g,cr,b,taper,wlt_weight)
 
-    fuelcheck=float(input("Fuel Percentage: "))
+    fuelcheck=fuel    #float(input("Fuel Percentage: "))
     fuel_load=fuel_load*fuelcheck/100
     fuel_shear=fuel_shear*fuelcheck/100
     fuel_moment=fuel_moment*fuelcheck/100
@@ -109,9 +109,9 @@ def calcForces(sf,nload,q,CL):
     
     return sum_load,sum_shear,sum_moment,torque_dist,shear_dist,inertial_shear,bending_dist,inertial_moment
 
-sum_load1,sum_shear1,sum_moment1,torque_dist1,lift_shear1,inertial_shear1,lift_moment1,inertial_moment1=calcForces(1.5,nload1,q,CL1)
-sum_load2,sum_shear2,sum_moment2,torque_dist2,lift_shear2,inertial_shear2,lift_moment2,inertial_moment2=calcForces(1.5,nload2,q,CL2)
-sum_load3,sum_shear3,sum_moment3,torque_dist3,lift_shear3,inertial_shear3,lift_moment3,inertial_moment3=calcForces(1.5,nload3,q3,CL3)
+sum_load1,sum_shear1,sum_moment1,torque_dist1,lift_shear1,inertial_shear1,lift_moment1,inertial_moment1=calcForces(1.5,nload1,q,CL1,0)
+sum_load2,sum_shear2,sum_moment2,torque_dist2,lift_shear2,inertial_shear2,lift_moment2,inertial_moment2=calcForces(1.5,nload2,q,CL2,100)
+sum_load3,sum_shear3,sum_moment3,torque_dist3,lift_shear3,inertial_shear3,lift_moment3,inertial_moment3=calcForces(1.5,nload3,q3,CL3,100)
 
 # Plotting
 
