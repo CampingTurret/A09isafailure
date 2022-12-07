@@ -395,7 +395,7 @@ def movPlot(v,theta,lc,design):
 
         deflection[i] = np.sum(v[0:i])
 
-    deflection=deflection*-1
+    # deflection=deflection*-1
 
     twist = np.linspace(0.0, 10.1, 400)
     for i in range(y.size):
@@ -419,7 +419,7 @@ def movPlot(v,theta,lc,design):
     labs = [l.get_label() for l in lns]
     ax1.legend(lns, labs, loc="upper right")
 
-    ax1.set_ylim([-0.5,4])
+    ax1.set_ylim([0.5,-4])
     ax2.set_ylim([-10,0.5])
     ax1.set_xlabel('y [m]')
     ax1.set_ylabel('deflection [m]')
