@@ -27,7 +27,7 @@ def plot_margin_of_safety(failure_stress, applied_stress):
     plt.show()
     return
 
-a = np.ones(50) * 7
-print(a)
-c = np.linspace(10, 5, 50)
-plot_margin_of_safety(a, c)
+# a = np.ones(50) * 7
+# print(a)
+# c = np.linspace(10, 5, 50)
+# plot_margin_of_safety(a, c)
