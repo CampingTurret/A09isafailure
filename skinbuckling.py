@@ -18,7 +18,7 @@ def sigmacrit(a_start, y, t, n_str):
     c = c_r - 0.6*y*2/ws*c_r
     b = 0.55*c/(n_str + 1)
     a = y - a_start
-    k_c = 3.277*(b**2)/(a**2)+7.125
+    k_c = 3.178*(b**2.082)/(a**2)+7.173
 
     sigma = (pi**2*k_c*E*(t**2))/(12*(1-v**2)*b**2)
 
