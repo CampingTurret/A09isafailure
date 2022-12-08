@@ -24,8 +24,3 @@ def sigmacrit(a_start, y, t, n_str):
 
     return sigma, k_c, a, b
 
-
-sigma_crit = sigmacrit(0, 1, 0.003, 0)
-print(sigma_crit)
-sigma_crit2 = sigmacrit(0, 1, 0.003, 4)
-print(sigma_crit2)
