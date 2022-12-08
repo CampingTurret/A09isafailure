@@ -22,5 +22,5 @@ def sigmacrit(a_start, y, t, n_str):
 
     sigma = (pi**2*k_c*E*(t**2))/(12*(1-v**2)*b**2)
 
-    return sigma, k_c, a, b
+    return sigma
 
