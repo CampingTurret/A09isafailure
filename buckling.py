@@ -1,7 +1,7 @@
-
 from codeinertia import t as t1
 import numpy as np
 from math import pi
+from skinbuckling import as skinsearch
 
 
 
@@ -26,16 +26,28 @@ from math import pi
 #
 #    return tau
 
-def sparsearch(desarray1,desarray2,desarray3,tau,sigma):
+def sparsearch():
     y = np.linspace(0,10,1,400)
     sparplacement = np.empty(400, bool)
-    while(index<399):
+    index = 0
+    while(True):
 
-        s =1 
+        x1 = websearch(index)
+        x2 = skinsearch(index)
+
+        xpos = min(x1,x2)
+
+        if(xpos>399):
+            sparplacement[399] = True
+            return sparplacement
+            
+
+        sparplacement[xpos] = True
+
+        index = index + xpos
 
     
 
-    return sparplacement
 
 
 
@@ -52,7 +64,7 @@ def taucrit(ks,t,b):
     return taucr
 
 
-def webspar(ystart):
+def websearch(ystart):
     yindex = ystart
     t = t1
 
@@ -120,5 +132,5 @@ def check(ye,yb,t,y):
 
 
 
-x = webspar(1)
+x = sparsearch
 print("webspar pos"+ str(x))
