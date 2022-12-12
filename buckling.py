@@ -1,12 +1,14 @@
 
 from re import A
-from codeinertia import t_spar as t1, spanInternalShear as SIS, V1 as V1
+from turtle import width
+from codeinertia import t_spar as t1, spanInternalShear as SIS, V1 as V1, sigma_y1 as sigmax, n as numstring, sigma_max1 as maxsig, tau_max1 as maxtau, v1 ,theta1
 import numpy as np
 from math import pi
-#from skinbuckling import as skinsearch
+from skinbuckling import skinsearch
+import matplotlib.pyplot as plt
 
 def ribsearch():
-    y = np.linspace(0,10,1,400)
+    y = np.linspace(0,10.1,400)
     ribplacement = np.full(400, False )
     ribplacement[0] = True
     index = 0
@@ -15,15 +17,13 @@ def ribsearch():
             ribplacement[399] = True
             return ribplacement
         x1 = websearch(index)
-        #x2 = skinsearch(index)
+        x2 = skinsearch(index, sigmax)
 
-        xpos = x1 #min(x1,x2)
-
+        xpos = min(x1,x2)
         if(xpos>399):
             ribplacement[399] = True
             return ribplacement
             
-
         ribplacement[xpos] = True
 
         index = xpos
@@ -54,7 +54,6 @@ def websearch(ystart):
     while(continu):
 
         continu = check(yindex, ystart,t,y)
-        print(yindex)
         yindex = yindex +1
 
         if(yindex > 399):
@@ -106,10 +105,81 @@ def check(ye,yb,t,y):
 
     return True
 
+#-----------------------
+
+def sigmacrit(k_c, b, t):
+
+    # h1, h2, w1, w2, A = airfoilparameters(0.2, 0.75)
+    E = 68.9 * 10**9
+    v = 1/3
+    sigma = (pi**2*k_c*E*(t**2))/(12*(1-v**2)*b**2)
+
+    return sigma
+
+
+def check2(ye, yb, t, y, stress):
+    a = y[ye] - y[yb]
+    b = 0.55*(3.44 - (2 * 3.44 * (0.6)) / (20.2) * y[yb])/(numstring+1)
+    ksc = 3.178*(b**2.082)/(a**2)+7.173
+
+    for x in range(np.size(y[yb:ye])):
+
+        sigmacr = sigmacrit(ksc, b, t)
+        sigmamax = stress[yb + x]
+
+        if (sigmamax > sigmacr):
+            return False
+
+    return True
+
+
+def skinsearch(ystart, stress):
+    yindex = ystart
+    t = t1
+
+    y = np.linspace(0.0, 10.1, 400)
+    continu = True
+
+    while (continu):
+
+        continu = check2(yindex, ystart, t, y, stress)
+        yindex = yindex + 1
+
+        if (yindex > 399):
+            return 399
+
+    yend = yindex - 1
+
+    return yend
+
+
+
+
+
+
+#-----------------------
+
+
 print("------------------------------------------------")
 tauf, taub = SIS(V1,t1,0)
 x = ribsearch()
+if (abs(maxtau)<207) :
+    print("structure survives shear")
+else : print("structure fails shear")
+if (abs(maxsig)< 276) :
+    print("structure survives bending")
+else: print("structure fails bending")
+if (abs(np.sum(theta1)) < 0.174):
+    print("structure survives twist")
+else: print("structure fails twist")
+if (abs(np.sum(v1)) < 3):
+    print("structure survives deflection")
+else: print("structure fails deflection")
+
+
 print("rib pos")
-print(x)
 
 print(np.sum(x))
+y = np.linspace(0,10.1,400)
+plt.bar(y,x,width = 0.08)
+plt.show()
