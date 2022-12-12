@@ -6,6 +6,8 @@ from matplotlib import pyplot as plt
 from variables import CL_des
 from variables import b as b_real
 
+print("The code will work إن شاء الله")
+
 # Winglet stuff on bottom of file
 
 b = b_real  # [m]
