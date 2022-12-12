@@ -505,18 +505,16 @@ def spanInternalShear(shear,t,tau):
     
     q_front,q_rear = qshearDist(shear)
     
-    front=tau1/10**6+q_front/(t*10**6)
-    rear=tau1/10**6-q_rear/(t*10**6)
+    front=tau1/10**6+q_front/(t)
+    rear=tau1/10**6-q_rear/(t)
     
     return front,rear
 
 
-v_front,v_rear=spanInternalShear(V1,min(t,t_spar),tau1)
-
-
-plt.plot(y,v_front, color="black")
-plt.plot(y,v_rear, color="red")
-plt.show()
+# v_front,v_rear=spanInternalShear(V1,min(t,t_spar),tau1)
+# plt.plot(y,v_front, color="black")
+# plt.plot(y,v_rear, color="red")
+# plt.show()
 
 
     
