@@ -1,11 +1,12 @@
 
-from re import A
-from turtle import width
-from codeinertia import t_spar as t1, spanInternalShear as SIS, V1 as V1, sigma_y1 as sigmax, n as numstring, sigma_max1 as maxsig, tau_max1 as maxtau, v1 ,theta1
+from codeinertia import t_spar as t1, spanInternalShear as SIS, V1 as V1, sigma_y1 as sigmax, n as numstring, sigma_max1 as maxsig, tau_max1 as maxtau, v1 ,theta1 , front_spar as fs
 import numpy as np
 from math import pi
 from skinbuckling import skinsearch
 import matplotlib.pyplot as plt
+import os
+import sys
+import subprocess
 
 def ribsearch():
     y = np.linspace(0,10.1,400)
@@ -163,7 +164,7 @@ def skinsearch(ystart, stress):
 print("------------------------------------------------")
 tauf, taub = SIS(V1,t1,0)
 x = ribsearch()
-if (abs(maxtau)<207) :
+if (max(abs(maxtau),abs(fs))<207):
     print("structure survives shear")
 else : print("structure fails shear")
 if (abs(maxsig)< 276) :
@@ -177,9 +178,16 @@ if (abs(np.sum(v1)) < 3):
 else: print("structure fails deflection")
 
 
-print("rib pos")
+print("number or ribs:" + str(np.sum(x)))
 
-print(np.sum(x))
 y = np.linspace(0,10.1,400)
 plt.bar(y,x,width = 0.08)
 plt.show()
+
+print("-------------------------------------------------------------")
+print("Restarting")
+print("-------------------------------------------------------------")
+print("Warning watch out for memory leeks")
+print("-------------------------------------------------------------")
+subprocess.call([sys.executable, os.path.realpath(__file__)] +
+sys.argv[1:])
