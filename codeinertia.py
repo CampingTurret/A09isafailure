@@ -346,7 +346,7 @@ def qshearDist(V):
     for i in range(400): # Calculate qs0
         int1[i]=sp.integrate.quad(lambda s: k[i]*t_spar*(s**2)/2*(x_axis[i]-X1*c[i]),0,h_front[i]/2)[0]
         
-        h1=h_front[i]/2-(h_front[i]/2-h_rear[i]/2)/((X2-X1)*c[i])*(x_axis[i]-X1*c[i])
+        # h1=h_front[i]/2-(h_front[i]/2-h_rear[i]/2)/((X2-X1)*c[i])*(x_axis[i]-X1*c[i])
         int2[i]=sp.integrate.quad(lambda s: k[i]*t*((h_front[i]/2)*s-(s**2)/2*((h_front[i]/2-h_rear[i]/2)/l_top[i]))*h1*(X2-X1)*c[i]/l_top[i],0,l_top[i])[0]
         
         int3[i]=sp.integrate.quad(lambda s: k[i]*t_spar*(h_rear[i]/2*s-(s**2)/2)+q12[i],0,h_rear[i]/2)[0]
