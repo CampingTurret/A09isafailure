@@ -1,33 +1,9 @@
 
 from re import A
 from codeinertia import t_spar as t1, spanInternalShear as SIS, V1 as V1
-from main import sum_shear1
 import numpy as np
 from math import pi
 #from skinbuckling import as skinsearch
-
-
-
-
-
-#def shearflowtorsion(t,c,T):
-
-#    h1,h2,w1,w1,a = afp(0.2,0.75)
-
-#    tau = T/(2*a*c*t)
-
-
-#    return tau
-
-
-#def shearV(t,c,V):
-#    kv = 1.2
-#    h1,h2,w1,w1,a = afp(0.2,0.75)
-#
-#   tau = V/((h1+h2)*t*c)
-#    tau = tau * kv
-#
-#    return tau
 
 def ribsearch():
     y = np.linspace(0,10,1,400)
@@ -92,17 +68,12 @@ def websearch(ystart):
 
 
 def check(ye,yb,t,y):
-
-
     a = y[ye] - y[yb]
-    print(a)
-
     c = 3.44 - (2* 3.44 *(0.6))/(20.2) * y[yb]    
     hf= c * 0.128807
     hb = c * 0.108861
     abrf = a/hf
     abrb = a/hb
-    
     if(abrf>1):
         #ksf = 0.1773*abrf**4 - 2.4181*abrf**3 + 12.044*abrf**2 - 26.253*abrf + 31.115
 
