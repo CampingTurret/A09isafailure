@@ -1,7 +1,6 @@
 import numpy as np
 # from codeinertia import airfoilparameters as afp
 from math import pi
-from codeinertia import
 
 # constants
 # y = np.linspace(0.0, 10.1, 400)
