@@ -501,10 +501,18 @@ Order running from main: 26-18-15
 Change the design number depending on what geometric values you are inputting.
 '''
 
-q_front,q_rear = qshearDist(V1)
+def spanInternalShear(shear,t,tau):
+    
+    q_front,q_rear = qshearDist(shear)
+    
+    front=tau1/10**6+q_front/(t*10**6)
+    rear=tau1/10**6-q_rear/(t*10**6)
+    
+    return front,rear
 
-v_front=tau1/10**6+q_front/(min(t,t_spar))/10**6
-v_rear=tau1/10**6-q_rear/(min(t,t_spar))/10**6
+
+v_front,v_rear=spanInternalShear(V1,min(t,t_spar),tau1)
+
 
 plt.plot(y,v_front, color="black")
 plt.plot(y,v_rear, color="red")
