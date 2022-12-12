@@ -16,13 +16,15 @@ def plot_margin_of_safety(margin_of_safety):
     plt.xlim([0, 11])
     plt.xticks(np.arange(0, 12, 1.0))
     plt.grid(True, color='0.9')
-    plt.axhline(y=0, color='black', linewidth=0.5, linestyle=(0, (5, 5)), xmax=10.1 / 11)
+    # plt.axhline(y=0, color='black', linewidth=0.5, linestyle=(0, (5, 5)), xmax=10.1 / 11)
     plt.xlabel('y [m]')
     plt.ylabel('Margin of Safety')
 
     plt.plot(y, margin_of_safety)
+    plt.gca().set_ylim(bottom=0)
 
-    plt.legend(['Neutral axis', 'Margin of safety'])
+    # plt.legend(['Neutral axis', 'Margin of safety'])
+    plt.legend(['Margin of safety'])
 
     plt.show()
     return margin_of_safety
