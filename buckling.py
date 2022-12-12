@@ -1,7 +1,8 @@
 
-from codeinertia import airfoilparameters as afp
+from codeinertia import t as t1
 import numpy as np
 from math import pi
+
 
 
 
@@ -28,9 +29,11 @@ from math import pi
 def sparsearch(desarray1,desarray2,desarray3,tau,sigma):
     y = np.linspace(0,10,1,400)
     sparplacement = np.empty(400, bool)
+    while(index<399):
+
+        s =1 
+
     
-
-
 
     return sparplacement
 
@@ -49,8 +52,9 @@ def taucrit(ks,t,b):
     return taucr
 
 
-def webspar(ystart,t):
+def webspar(ystart):
     yindex = ystart
+    t = t1
 
     y = np.linspace(0.0, 10.1, 400)
 
@@ -58,6 +62,9 @@ def webspar(ystart,t):
     while(check(yindex, ystart,t,y)):
 
         yindex = yindex +1
+
+        if(yindex > 399):
+            return 399
 
     
 
@@ -87,6 +94,8 @@ def check(ye,yb,t,y):
             ksf = 9.5
         
         for x in range(np.size(y[yb:ye])):
+            c = 3.44 - (2* 3.44 *(0.6))/(20.2) * y[yb+x]
+            hf= c * 0.128807
             taucr = taucrit(ksf,t,hf)
             taumax = [yb+x]
 
@@ -99,17 +108,17 @@ def check(ye,yb,t,y):
         if (abrb>5):
             ksf = 9.5
         for x in range(np.size(y[yb:ye])):
+            c = 3.44 - (2* 3.44 *(0.6))/(20.2) * y[yb+x]
+            hb = c * 0.108861
             taucr = taucrit(ksb,t,hb)
             taumax = [yb+x]
 
             if(taumax>taucr):
                 return False
 
-
-
-
-
     return True
 
 
 
+x = webspar(1)
+print("webspar pos"+ str(x))
