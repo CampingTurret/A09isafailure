@@ -164,6 +164,7 @@ def skinsearch(ystart, stress):
 print("------------------------------------------------")
 tauf, taub = SIS(V1,t1,0)
 x = ribsearch()
+print("------------------------------------------------")
 if (max(abs(maxtau),abs(fs))<207):
     print("structure survives shear")
 else : print("structure fails shear")
@@ -173,10 +174,10 @@ else: print("structure fails bending")
 if (abs(np.sum(theta1)) < 0.174):
     print("structure survives twist")
 else: print("structure fails twist")
-if (abs(np.sum(v1)) < 3):
+if (abs(np.sum(v1)) < 3.03):
     print("structure survives deflection")
 else: print("structure fails deflection")
-
+print("------------------------------------------------")
 
 print("number or ribs:" + str(np.sum(x)))
 
