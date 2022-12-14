@@ -54,7 +54,6 @@ def websearch(ystart):
     
     return yend
 
-
 def check(ye,yb,t,y):
     a = y[ye] - y[yb]
     c = 3.44 - (2* 3.44 *(0.6))/(20.2) * y[yb]    
@@ -77,7 +76,6 @@ def check(ye,yb,t,y):
 
             if(taumax>taucr):
                 return False
-
 
     if(abrb>1):
         ksb = 4.982/(abrb**2.311) +9.378
@@ -143,13 +141,7 @@ def skinsearch(ystart, stress):
 
     return yend
 
-
-
-
-
-
 #-----------------------
-
 
 print("------------------------------------------------")
 tauf, taub = SIS(V1,t1,0)
@@ -180,5 +172,4 @@ print("Restarting")
 print("-------------------------------------------------------------")
 print("Warning watch out for memory leeks")
 print("-------------------------------------------------------------")
-subprocess.call([sys.executable, os.path.realpath(__file__)] +
-sys.argv[1:])
+subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
