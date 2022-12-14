@@ -32,5 +32,9 @@ margin_of_safety3 = failure_stress/sigma_y3
 margin_of_safety_lowest = np.minimum(margin_of_safety1, margin_of_safety2, margin_of_safety3)
 
 print(margin_of_safety_lowest)
+min_margin_of_safety = np.min(margin_of_safety_lowest)
+if min_margin_of_safety <= 1:
+    print("WATCH OUT: lowest margin of safety is", min_margin_of_safety)
+
 plot_margin_of_safety(margin_of_safety_lowest)
 
