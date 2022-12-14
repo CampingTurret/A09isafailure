@@ -28,14 +28,6 @@ def ribsearch():
         ribplacement[xpos] = True
 
         index = xpos
-        
-
-    
-
-
-
-
-
 
 def taucrit(ks,t,b):
 
@@ -43,7 +35,6 @@ def taucrit(ks,t,b):
     v = 1/3
     taucr = (pi*pi*ks*E*t*t)/(12*(1-v*v)*b*b)
     return taucr
-
 
 def websearch(ystart):
     yindex = ystart
@@ -59,9 +50,6 @@ def websearch(ystart):
 
         if(yindex > 399):
             return 399
-
-    
-
     yend = yindex - 1
     
     return yend
@@ -113,7 +101,7 @@ def sigmacrit(k_c, b, t):
     # h1, h2, w1, w2, A = airfoilparameters(0.2, 0.75)
     E = 68.9 * 10**9
     v = 1/3
-    sigma = (pi**2*k_c*E*(t**2))/(12*(1-v**2)*b**2)
+    sigma = (pi**2*k_c*E*(t**2))/(12*(1-v**2)*(b**2))
 
     return sigma
 
@@ -121,8 +109,10 @@ def sigmacrit(k_c, b, t):
 def check2(ye, yb, t, y, stress):
     a = y[ye] - y[yb]
     b = 0.55*(3.44 - (2 * 3.44 * (0.6)) / (20.2) * y[yb])/(numstring+1)
-    ksc = 3.178*(b**2.082)/(a**2)+7.173
 
+    #ksc = 3.178*(b**2.082)/(a**2)+7.173
+    ksc = 7
+    #ksc = 4
     for x in range(np.size(y[yb:ye])):
 
         sigmacr = sigmacrit(ksc, b, t)
