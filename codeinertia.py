@@ -73,10 +73,10 @@ ang = np.rad2deg(dhs)
 l_top=w1*c
 l_bot=w2*c
 
-print(l_top)
-print(l_bot)
-print(h_front)
-print(h_rear)
+# print(l_top)
+# print(l_bot)
+# print(h_front)
+# print(h_rear)
 
 area_skin = (h_front+h_rear)*t_spar+(up_beam+low_beam)*t
 area = (h_front+h_rear)*t_spar+(up_beam+low_beam)*t+A_stringer*n
@@ -90,6 +90,9 @@ print("Structure Weight:",str(volume*2700),"[kg]\n")
 ds = h_front + h_rear + up_beam + low_beam
 enc_area = (h_front + h_rear)/2 * (X2-X1) * c
 J = 4 * (enc_area)**2 / (h_front/t_spar + h_rear/t_spar + up_beam/t + low_beam/t)
+
+# vol=2*(np.trapz(enc_area,y)) 
+# print(str(vol*2700))
 
 left_ax = t_spar * h_front * X1 * c # Centroid stuff
 left_a = t_spar * h_front # Area
@@ -389,7 +392,7 @@ theta3,v3=mov(T3,M3)
 
 ##### Internal Stresses
 
-print(I)
+# print(I)
 
 # Shear V
 
