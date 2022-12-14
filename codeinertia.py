@@ -73,6 +73,11 @@ ang = np.rad2deg(dhs)
 l_top=w1*c
 l_bot=w2*c
 
+print(l_top)
+print(l_bot)
+print(h_front)
+print(h_rear)
+
 area_skin = (h_front+h_rear)*t_spar+(up_beam+low_beam)*t
 area = (h_front+h_rear)*t_spar+(up_beam+low_beam)*t+A_stringer*n
 volume = 2*(np.trapz(area,y)) # Full span volume
@@ -131,7 +136,7 @@ m = n
 while m > 0.1 :
     I_stringer_top = A_stringer * top_dist**2
     I_y_top += I_stringer_top
-
+    
     top_dist -= top_stringer_distance
     m = m-1
 
@@ -383,6 +388,8 @@ theta2,v2=mov(T2,M2)
 theta3,v3=mov(T3,M3)
 
 ##### Internal Stresses
+
+print(I)
 
 # Shear V
 
