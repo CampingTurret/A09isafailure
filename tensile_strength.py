@@ -14,7 +14,7 @@ sigma_y2 = np.abs(sigma_y2)
 sigma_y3 = np.abs(sigma_y3)
 
 
-yield_strength = 276e6  # [Pa}, tensile yield strength
+yield_strength = 276e6  # [Pa], tensile yield strength
 # print(np.size(sigma_y3))  #, np.ones(sigma_y2), np.size(sigma_y3))
 failure_stress = np.ones(np.size(sigma_y1)) * yield_strength
 # print(failure_stress)
