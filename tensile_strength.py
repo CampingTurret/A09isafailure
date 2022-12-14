@@ -14,7 +14,7 @@ sigma_y2 = np.abs(sigma_y2)
 sigma_y3 = np.abs(sigma_y3)
 
 
-yield_strength = 276e6  # [Pa}, tensile yield strength
+yield_strength = 276e6  # [Pa], tensile yield strength
 # print(np.size(sigma_y3))  #, np.ones(sigma_y2), np.size(sigma_y3))
 failure_stress = np.ones(np.size(sigma_y1)) * yield_strength
 # print(failure_stress)
@@ -32,5 +32,9 @@ margin_of_safety3 = failure_stress/sigma_y3
 margin_of_safety_lowest = np.minimum(margin_of_safety1, margin_of_safety2, margin_of_safety3)
 
 print(margin_of_safety_lowest)
+min_margin_of_safety = np.min(margin_of_safety_lowest)
+if min_margin_of_safety <= 1:
+    print("WATCH OUT: lowest margin of safety is", min_margin_of_safety)
+
 plot_margin_of_safety(margin_of_safety_lowest)
 
