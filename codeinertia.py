@@ -66,6 +66,10 @@ h_rear = h2 * c
 up_beam = w1 * c
 low_beam = w2 * c
 
+dh = (h_front-h_rear)/2
+dhs = dh/((X2-X1)*c)
+ang = np.rad2deg(dhs)
+
 l_top=w1*c
 l_bot=w2*c
 
@@ -155,9 +159,11 @@ I_wingbox_l = t_spar * h_front**3 /12 + t_spar*h_front * (h_front/2 - y_axis)**2
 
 I_wingbox_r = t_spar * h_rear**3 /12 + t_spar*h_rear * (h_rear/2 - y_axis)**2
 
-I_wingbox_u = up_beam * t * ( h_front-((up_beam**2-((X2-X1)*c)**2)**0.5)/2-y_axis)**2
+# I_wingbox_u = up_beam * t * ( h_front-((up_beam**2-((X2-X1)*c)**2)**0.5)/2-y_axis)**2
+I_wingbox_u = t*up_beam**3*(np.sin(dhs)**2)/12 + t*up_beam*(h_rear/2+dh/2)**2
 
-I_wingbox_d = low_beam * t * ( ((low_beam**2-((X2-X1)*c)**2)**0.5)/2 - y_axis)**2
+# I_wingbox_d = low_beam * t * ( ((low_beam**2-((X2-X1)*c)**2)**0.5)/2 - y_axis)**2
+I_wingbox_d = t*low_beam**3*(np.sin(dhs)**2)/12 + t*low_beam*(h_rear/2+dh/2)**2
 
 I_wingbox = I_wingbox_l + I_wingbox_r + I_wingbox_u + I_wingbox_d
 
@@ -304,7 +310,7 @@ def qshear(V):
     for i in range(400): # Calculate qs0
         int1[i]=sp.integrate.quad(lambda s: k[i]*t_spar*(s**2)/2*(x_axis[i]-X1*c[i]),0,h_front[i]/2)[0]
         
-        h1=h_front[i]/2-(h_front[i]/2-h_rear[i]/2)/((X2-X1)*c[i])*(x_axis[i]-X1*c[i])
+        # h1=h_front[i]/2-(h_front[i]/2-h_rear[i]/2)/((X2-X1)*c[i])*(x_axis[i]-X1*c[i])
         int2[i]=sp.integrate.quad(lambda s: k[i]*t*((h_front[i]/2)*s-(s**2)/2*((h_front[i]/2-h_rear[i]/2)/l_top[i]))*h1*(X2-X1)*c[i]/l_top[i],0,l_top[i])[0]
         
         int3[i]=sp.integrate.quad(lambda s: k[i]*t_spar*(h_rear[i]/2*s-(s**2)/2)+q12[i],0,h_rear[i]/2)[0]
@@ -389,7 +395,7 @@ vtau3b = q3b/(min(t,t_spar))/10**6
 
 # Bending Mx
 
-sigma_y1 = (M1 * h1/2)/I
+sigma_y1 = (M1 * (h1/2))/I
 sigma_max1 = round(max(sigma_y1)/10**6, 2)
 
 sigma_y2 = (M2 * h1/2)/I
