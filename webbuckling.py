@@ -1,5 +1,5 @@
 
-from codeinertia import t_spar as t1, spanInternalShear as SIS, V1 as V1, sigma_y1 as sigmax, n as numstring, sigma_max1 as maxsig, tau_max1 as maxtau, v1 ,theta1 , front_spar as fs
+from codeinertia import t_spar as t1, t as t2, spanInternalShear as SIS, V1 as V1, sigma_y1 as sigmax, n as numstring, sigma_max1 as maxsig, tau_max1 as maxtau, v1 ,theta1 , front_spar as fs
 import numpy as np
 from math import pi
 from skinbuckling import skinsearch
@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 import os
 import sys
 import subprocess
+
+w = float(input("Stringer thickness [m]: "))
+
 
 def ribsearch():
     y = np.linspace(0,10.1,400)
@@ -19,8 +22,10 @@ def ribsearch():
             return ribplacement
         x1 = websearch(index)
         x2 = skinsearch(index, sigmax)
+        #x3 = columnsearch(index,sigmax)
 
         xpos = min(x1,x2)
+        print(xpos)
         if(xpos>399):
             ribplacement[399] = True
             return ribplacement
@@ -44,12 +49,13 @@ def websearch(ystart):
     continu = True
     
     while(continu):
-
-        continu = check(yindex, ystart,t,y)
         yindex = yindex +1
-
         if(yindex > 399):
             return 399
+        continu = check(yindex, ystart,t,y)
+        
+
+  
     yend = yindex - 1
     
     return yend
@@ -57,8 +63,8 @@ def websearch(ystart):
 def check(ye,yb,t,y):
     a = y[ye] - y[yb]
     c = 3.44 - (2* 3.44 *(0.6))/(20.2) * y[yb]    
-    hf= c * 0.128807
-    hb = c * 0.108861
+    hf= c * 0.1121629
+    hb = c * 0.058208
     abrf = a/hf
     abrb = a/hb
     if(abrf>1):
@@ -73,21 +79,23 @@ def check(ye,yb,t,y):
  
             taucr = taucrit(ksf,t,hf)
             taumax = tauf[yb+x]
-
+            
             if(taumax>taucr):
+                print("front")
                 return False
 
     if(abrb>1):
         ksb = 4.982/(abrb**2.311) +9.378
         #ksb = 0.1773*abrb**4 - 2.4181*abrb**3 + 12.044*abrb**2 - 26.253*abrb + 31.115
         if (abrb>5):
-            ksf = 9.5
+            ksb = 9.5
         for x in range(np.size(y[yb:ye])):
 
             taucr = taucrit(ksb,t,hb)
             taumax = taub[yb+x]
 
             if(taumax>taucr):
+                print("back")
                 return False
 
     return True
@@ -108,15 +116,19 @@ def check2(ye, yb, t, y, stress):
     a = y[ye] - y[yb]
     b = 0.55*(3.44 - (2 * 3.44 * (0.6)) / (20.2) * y[yb])/(numstring+1)
 
-    #ksc = 3.178*(b**2.082)/(a**2)+7.173
-    ksc = 7
+    ksc = 3.178*(b**2.082)/(a**2.082)+7.173
+    #ksc = 7
     #ksc = 4
+    if(a/b > 5): ksc = 7.2
     for x in range(np.size(y[yb:ye])):
 
         sigmacr = sigmacrit(ksc, b, t)
         sigmamax = stress[yb + x]
 
         if (sigmamax > sigmacr):
+            print(sigmacr)
+            print(sigmamax)
+            print(ksc)
             return False
 
     return True
@@ -124,18 +136,16 @@ def check2(ye, yb, t, y, stress):
 
 def skinsearch(ystart, stress):
     yindex = ystart
-    t = t1
+    t = t2
 
     y = np.linspace(0.0, 10.1, 400)
     continu = True
 
     while (continu):
-
-        continu = check2(yindex, ystart, t, y, stress)
         yindex = yindex + 1
-
         if (yindex > 399):
             return 399
+        continu = check2(yindex, ystart, t, y, stress)
 
     yend = yindex - 1
 
@@ -143,6 +153,45 @@ def skinsearch(ystart, stress):
 
 #-----------------------
 
+def columnsearch(ystart, stress):
+    yindex = ystart
+    
+
+    y = np.linspace(0.0, 10.1, 400)
+    continu = True
+
+    while (continu):
+        yindex = yindex + 1
+        if (yindex > 399):
+            return 399
+        continu = check3(yindex, ystart, w, y, stress)
+
+    yend = yindex - 1
+
+    return yend
+
+def check3(ye, yb, t, y, stress):
+    a = y[ye] - y[yb]
+    b = 0.55*(3.44 - (2 * 3.44 * (0.6)) / (20.2) * y[yb])/(numstring+1)
+
+    ksc = 3.178*(b**2.082)/(a**2.082)+7.173
+    #ksc = 7
+    #ksc = 4
+    if(a/b > 5): ksc = 7.2
+    for x in range(np.size(y[yb:ye])):
+
+        sigmacr = sigmacrit(ksc, b, t)
+        sigmamax = stress[yb + x]
+
+        if (sigmamax > sigmacr):
+            print(sigmacr)
+            print(sigmamax)
+            print(ksc)
+            return False
+
+    return True
+
+#-----------------------
 print("------------------------------------------------")
 tauf, taub = SIS(V1,t1,0)
 x = ribsearch()
@@ -166,7 +215,6 @@ print("number or ribs:" + str(np.sum(x)))
 y = np.linspace(0,10.1,400)
 plt.bar(y,x,width = 0.08)
 plt.show()
-
 print("-------------------------------------------------------------")
 print("Restarting")
 print("-------------------------------------------------------------")
