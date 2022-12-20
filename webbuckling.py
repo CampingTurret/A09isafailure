@@ -1,5 +1,6 @@
 
-from codeinertia import t_spar as t1, t as t2, spanInternalShear as SIS, V1 as V1, sigma_y1 as sigmax, n as numstring, sigma_max1 as maxsig, tau_max1 as maxtau, v1 ,theta1 , front_spar as fs
+from cmath import sqrt
+from codeinertia import t_spar as t1, t as t2, spanInternalShear as SIS, V1 as V1, sigma_y1 as sigmax, n as numstring, sigma_max1 as maxsig, tau_max1 as maxtau, v1 ,theta1 , front_spar as fs, A_stringer as Astring
 import numpy as np
 from math import pi
 from skinbuckling import skinsearch
@@ -8,8 +9,9 @@ import os
 import sys
 import subprocess
 
-w = float(input("Stringer thickness [m]: "))
-
+w = float(input("Stringer width [m]: "))
+ts = w - sqrt(w**2 - Astring)
+Is = ts*w*w*w/3 + ts**3 *w /3 - ts**4/3
 
 def ribsearch():
     y = np.linspace(0,10.1,400)
@@ -22,9 +24,12 @@ def ribsearch():
             return ribplacement
         x1 = websearch(index)
         x2 = skinsearch(index, sigmax)
-        #x3 = columnsearch(index,sigmax)
+        x3 = columnsearch(index,sigmax)
 
-        xpos = min(x1,x2)
+        xpos = min(x1,x2,x3)
+        if (x1 < x2 and x1 < x3): print('web')
+        elif (x2 < x3 and x2 < x1): print('skin')
+        elif (x3 < x1 and x3 <x2): print('column') 
         print(xpos)
         if(xpos>399):
             ribplacement[399] = True
@@ -70,32 +75,30 @@ def check(ye,yb,t,y):
     if(abrf>1):
         #ksf = 0.1773*abrf**4 - 2.4181*abrf**3 + 12.044*abrf**2 - 26.253*abrf + 31.115
 
-        ksf = 4.982/(abrf**2.311) +9.378
+        ksf = 3.948/(abrf**2.452) +5.633
 
         if (abrf>5):
-            ksf = 9.5
+            ksf = 5.6
         
         for x in range(np.size(y[yb:ye])):
  
             taucr = taucrit(ksf,t,hf)
             taumax = tauf[yb+x]
             
-            if(taumax>taucr):
-                print("front")
+            if(abs(taumax)>taucr):
                 return False
 
     if(abrb>1):
-        ksb = 4.982/(abrb**2.311) +9.378
+        ksb = 3.948/(abrf**2.452) +5.633
         #ksb = 0.1773*abrb**4 - 2.4181*abrb**3 + 12.044*abrb**2 - 26.253*abrb + 31.115
         if (abrb>5):
-            ksb = 9.5
+            ksb = 5.6
         for x in range(np.size(y[yb:ye])):
 
             taucr = taucrit(ksb,t,hb)
             taumax = taub[yb+x]
 
-            if(taumax>taucr):
-                print("back")
+            if(abs(taumax)>taucr):
                 return False
 
     return True
@@ -115,20 +118,18 @@ def sigmacrit(k_c, b, t):
 def check2(ye, yb, t, y, stress):
     a = y[ye] - y[yb]
     b = 0.55*(3.44 - (2 * 3.44 * (0.6)) / (20.2) * y[yb])/(numstring+1)
+    abr = a/b
 
-    ksc = 3.178*(b**2.082)/(a**2.082)+7.173
+    ksc = 0.2354/(abr**3.299) +4.088
     #ksc = 7
     #ksc = 4
-    if(a/b > 5): ksc = 7.2
+    if(a/b > 5): ksc = 4.088
     for x in range(np.size(y[yb:ye])):
 
         sigmacr = sigmacrit(ksc, b, t)
         sigmamax = stress[yb + x]
 
-        if (sigmamax > sigmacr):
-            print(sigmacr)
-            print(sigmamax)
-            print(ksc)
+        if (abs(sigmamax) > sigmacr):
             return False
 
     return True
@@ -172,25 +173,23 @@ def columnsearch(ystart, stress):
 
 def check3(ye, yb, t, y, stress):
     a = y[ye] - y[yb]
-    b = 0.55*(3.44 - (2 * 3.44 * (0.6)) / (20.2) * y[yb])/(numstring+1)
+    
 
-    ksc = 3.178*(b**2.082)/(a**2.082)+7.173
-    #ksc = 7
-    #ksc = 4
-    if(a/b > 5): ksc = 7.2
+    K = 1
     for x in range(np.size(y[yb:ye])):
 
-        sigmacr = sigmacrit(ksc, b, t)
+        sigmacr = colbuck(K, a)
         sigmamax = stress[yb + x]
 
-        if (sigmamax > sigmacr):
-            print(sigmacr)
-            print(sigmamax)
-            print(ksc)
+        if (abs(sigmamax) > sigmacr):
             return False
 
     return True
+def colbuck(K,l):
+    E = 68.9 * 10**9
+    sigmacr = (K*pi*pi*E*Is)/(l*l*Astring)
 
+    return sigmacr
 #-----------------------
 print("------------------------------------------------")
 tauf, taub = SIS(V1,t1,0)
@@ -211,7 +210,7 @@ else: print("structure fails deflection")
 print("------------------------------------------------")
 
 print("number or ribs:" + str(np.sum(x)))
-
+print("stringer thickness" + str(ts))
 y = np.linspace(0,10.1,400)
 plt.bar(y,x,width = 0.08)
 plt.show()
@@ -221,3 +220,5 @@ print("-------------------------------------------------------------")
 print("Warning watch out for memory leaks")
 print("-------------------------------------------------------------")
 subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
+
+
