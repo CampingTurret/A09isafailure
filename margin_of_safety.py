@@ -21,7 +21,8 @@ def plot_margin_of_safety(margin_of_safety, bays=False):
     plt.ylabel('Margin of Safety')
 
     if bays is not False:
-        np.delete(margin_of_safety, 0)
+        for i in margin_of_safety:
+            np.delete(i, 0)
         bays_pos = bays * y
         #plt.bar(y, bays*max_MoS, color='0.4', width=0.08, label='Ribs')
         plt.axvline(0, color='0.7', linestyle=(0, (5, 5)), label='Ribs')
