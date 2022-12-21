@@ -1,6 +1,6 @@
 
 from cmath import sqrt
-from codeinertia import t_spar as t1, t as t2, spanInternalShear as SIS, V1 as V1, sigma_y1 as sigmax, n as numstring, sigma_max1 as maxsig, tau_max1 as maxtau, v1 ,theta1 , front_spar as fs, A_stringer as Astring
+from codeinertia import t_spar as t1, t as t2, spanInternalShear as SIS, V1 as V1, sigma_y1 as sigmax, n as numstring, sigma_max1 as maxsig, tau_max1 as maxtau, v1 ,theta1 , front_spar as fs, A_stringer as Astring, enc_area as Aenc, volume as Vinc;
 import numpy as np
 from math import pi
 from skinbuckling import skinsearch
@@ -9,7 +9,19 @@ import os
 import sys
 import subprocess
 
+ue = np.empty(0)
+u = np.append(ue,0)
+
+marf = np.append(ue,0)
+marb = np.append(ue,0)
+marc = np.append(ue,0)
+mars = np.append(ue,0)
+
+
+
+
 w = float(input("Stringer width [m]: "))
+tr = float(input("Rib thickness [m]: "))
 ts = w - sqrt(w**2 - Astring)
 Is = ts*w*w*w/3 + ts**3 *w /3 - ts**4/3
 
@@ -31,6 +43,8 @@ def ribsearch():
         elif (x2 < x3 and x2 < x1): print('skin')
         elif (x3 < x1 and x3 <x2): print('column') 
         print(xpos)
+        global u 
+        u = np.append(u,xpos)
         if(xpos>399):
             ribplacement[399] = True
             return ribplacement
@@ -191,6 +205,90 @@ def colbuck(K,l):
 
     return sigmacr
 #-----------------------
+
+def Marginfunc():
+    y = np.linspace(0,10.1,400)
+
+    q = np.empty(400)
+    for h in range(np.size(u) - 1):
+
+        u1 = int(u[h])
+        u2 = int(u[h+1])
+        print(u1)
+
+        a = y[u2] - y[u1]
+        c = 3.44 - (2* 3.44 *(0.6))/(20.2) * y[u1]    
+        hf= c * 0.1121629
+        hb = c * 0.058208
+        abrf = a/hf
+        abrb = a/hb
+
+
+        if(abrf>1):
+            ksf = 3.948/(abrf**2.452) +5.633
+
+        if(abrf<1):
+            ksf = 500
+
+        if (abrf>5):
+            ksf = 5.6
+        
+        for x in range(np.size(y[u1:u2])):
+ 
+            taucr = taucrit(ksf,t1,hf)
+            taumax = tauf[u1+x]
+            mar = taucr/taumax
+            global marf
+            marf = np.append(marf,mar)
+
+        if(abrb<1):
+            ksb = 500
+        if(abrb>1):
+            ksb = 3.948/(abrf**2.452) +5.633
+            #ksb = 0.1773*abrb**4 - 2.4181*abrb**3 + 12.044*abrb**2 - 26.253*abrb + 31.115
+        if (abrb>5):
+            ksb = 5.6
+        for x in range(np.size(y[u1:u2])):
+
+            taucr = taucrit(ksb,t1,hb)
+            taumax = taub[u1+x]
+            mar = taucr/taumax
+            global marb
+            marb = np.append(marb,mar)
+    
+        K = 1
+        for x in range(np.size(y[u1:u2])):
+
+            sigmacr = colbuck(K, a)
+            sigmamax = sigmax[u1 + x]
+            mar = sigmacr/sigmamax
+            global marc
+            marc = np.append(marc,mar)
+
+        b = 0.55*(3.44 - (2 * 3.44 * (0.6)) / (20.2) * y[u1])/(numstring+1)
+        abr = a/b
+
+        ksc = 0.2354/(abr**3.299) +4.088
+        #ksc = 7
+        #ksc = 4
+        if(a/b > 5): ksc = 4.088
+        for x in range(np.size(y[u1:u2])):
+
+            sigmacr = sigmacrit(ksc, b, t2)
+            sigmamax = sigmax[u1 + x]
+            mar = sigmacr/sigmamax
+            global mars
+            mars = np.append(mars,mar)
+
+                
+
+    
+
+
+    return
+
+
+#-----------------------
 print("------------------------------------------------")
 tauf, taub = SIS(V1,t1,0)
 x = ribsearch()
@@ -210,7 +308,13 @@ else: print("structure fails deflection")
 print("------------------------------------------------")
 
 print("number or ribs:" + str(np.sum(x)))
+
+M = x * Aenc * 2700 * 2 * tr
+print("rib weight:"+ str(np.sum(M)))
+print("Total weight" + str(np.sum(M) + Vinc * 2700)) 
 print("stringer thickness" + str(ts))
+Marginfunc()
+print(mars)
 y = np.linspace(0,10.1,400)
 plt.bar(y,x,width = 0.08)
 plt.show()
@@ -220,5 +324,9 @@ print("-------------------------------------------------------------")
 print("Warning watch out for memory leaks")
 print("-------------------------------------------------------------")
 subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
+
+
+
+
 
 
