@@ -12,6 +12,7 @@ def plot_margin_of_safety(margin_of_safety, bays=False, legends=['Margin of Safe
     #     print("Applied stress and failure stress do not have the same size.")
     #     return
     # margin_of_safety = failure_stress / applied_stress\
+    plt.cla()
 
     plt.xlim([0, 11])
     plt.xticks(np.arange(0, 12, 1.0))
