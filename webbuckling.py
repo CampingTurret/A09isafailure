@@ -4,6 +4,7 @@ from codeinertia import t_spar as t1, t as t2, spanInternalShear as SIS, V1 as V
 import numpy as np
 from math import pi
 from skinbuckling import skinsearch
+from margin_of_safety import plot_margin_of_safety
 import matplotlib.pyplot as plt
 import os
 import sys
@@ -39,10 +40,10 @@ def ribsearch():
         x3 = columnsearch(index,sigmax)
 
         xpos = min(x1,x2,x3)
-        if (x1 < x2 and x1 < x3): print('web')
-        elif (x2 < x3 and x2 < x1): print('skin')
-        elif (x3 < x1 and x3 <x2): print('column') 
-        print(xpos)
+        #if (x1 < x2 and x1 < x3): print('web')
+        #elif (x2 < x3 and x2 < x1): print('skin')
+        #elif (x3 < x1 and x3 <x2): print('column') 
+        #print(xpos)
         global u 
         u = np.append(u,xpos)
         if(xpos>399):
@@ -237,7 +238,7 @@ def Marginfunc():
  
             taucr = taucrit(ksf,t1,hf)
             taumax = tauf[u1+x]
-            mar = taucr/taumax
+            mar = abs(taucr/taumax)
             global marf
             marf = np.append(marf,mar)
 
@@ -261,7 +262,8 @@ def Marginfunc():
 
             sigmacr = colbuck(K, a)
             sigmamax = sigmax[u1 + x]
-            mar = sigmacr/sigmamax
+            mar = float(np.real(sigmacr/sigmamax))
+
             global marc
             marc = np.append(marc,mar)
 
@@ -314,10 +316,22 @@ print("rib weight:"+ str(np.sum(M)))
 print("Total weight" + str(np.sum(M) + Vinc * 2700)) 
 print("stringer thickness" + str(ts))
 Marginfunc()
-print(mars)
 y = np.linspace(0,10.1,400)
-plt.bar(y,x,width = 0.08)
-plt.show()
+
+#plot_margin_of_safety(marc,x)
+#plot_margin_of_safety(mars,x)
+#plot_margin_of_safety(marf,x)
+#plot_margin_of_safety(marb,x)
+marfb = np.minimum(marf,marb)
+qnk = (marc,mars,marf,marb)
+sig = abs((276*10**6)/sigmax) 
+taf = abs((207*10**6)/(tauf))
+tab = abs((207*10**6)/(taub))
+qkh = np.minimum(sig,taf,tab)
+marfb = np.minimum(qkh,marfb)
+plot_margin_of_safety(qnk,x,['Column' ,'Skin' ,'Front Spar' ,'Rear Spar' ])
+plot_margin_of_safety([sig,taf,tab],legends=['Tensile' ,'Shear Front','Shear Back' ])
+plot_margin_of_safety([np.minimum(marc,mars,marfb)],x,['Minimum'])
 print("-------------------------------------------------------------")
 print("Restarting")
 print("-------------------------------------------------------------")
