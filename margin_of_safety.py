@@ -7,7 +7,7 @@ def plot_margin_of_safety(margin_of_safety, bays=False):
     # n = np.size(failure_stress)
     # print(n)
     # if n == np.size(applied_stress):
-    y = np.linspace(0, b / 2, np.size(margin_of_safety))
+    y = np.linspace(0, b / 2, np.size(margin_of_safety[0]))
     # else:
     #     print("Applied stress and failure stress do not have the same size.")
     #     return
@@ -20,19 +20,18 @@ def plot_margin_of_safety(margin_of_safety, bays=False):
     plt.xlabel('y [m]')
     plt.ylabel('Margin of Safety')
 
-    max_MoS = np.max(margin_of_safety)
-
     if bays is not False:
         np.delete(margin_of_safety, 0)
         bays_pos = bays * y
         #plt.bar(y, bays*max_MoS, color='0.4', width=0.08, label='Ribs')
-        plt.axvline(0, color='0.4', linestyle=(0, (5, 5)), label='Ribs')
+        plt.axvline(0, color='0.7', linestyle=(0, (5, 5)), label='Ribs')
         for bay in bays_pos:
             if bay != 0:
-                plt.axvline(bay, linewidth=1, color='0.4', linestyle=(0,(5,5)))
+                plt.axvline(bay, linewidth=1, color='0.7', linestyle=(0,(5,5)))
         # plt.vlines(bays_pos, ymin=0, ymax=1, colors='0.4', label='Ribs', linestyles=(0,(5,5)))
 
-    plt.plot(y, margin_of_safety, label='Margin of safety')
+    for MoS in margin_of_safety:
+        plt.plot(y, MoS, label='Margin of safety')
     plt.gca().set_ylim(bottom=0)
 
     # plt.legend(['Neutral axis', 'Margin of safety'])
