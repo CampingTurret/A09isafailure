@@ -3,7 +3,7 @@ import numpy as np
 from variables import b
 
 
-def plot_margin_of_safety(margin_of_safety, bays=False):
+def plot_margin_of_safety(margin_of_safety, bays=False, legends=['Margin of Safety']):
     # n = np.size(failure_stress)
     # print(n)
     # if n == np.size(applied_stress):
@@ -31,8 +31,8 @@ def plot_margin_of_safety(margin_of_safety, bays=False):
                 plt.axvline(bay, linewidth=1, color='0.7', linestyle=(0,(5,5)))
         # plt.vlines(bays_pos, ymin=0, ymax=1, colors='0.4', label='Ribs', linestyles=(0,(5,5)))
 
-    for MoS in margin_of_safety:
-        plt.plot(y, MoS, label='Margin of safety')
+    for MoS, legend in zip(margin_of_safety, legends):
+        plt.plot(y, MoS, label=legend)
     plt.gca().set_ylim(bottom=0)
 
     # plt.legend(['Neutral axis', 'Margin of safety'])
