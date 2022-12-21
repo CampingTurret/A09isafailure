@@ -42,7 +42,9 @@ def plot_margin_of_safety(margin_of_safety, bays=False):
     return margin_of_safety
 
 
-c = np.linspace(10, 5, 400)
-d = np.zeros(400)
-d[15], d[50], d[160], d[300], d[-1] = 1, 1, 1, 1, 1
-plot_margin_of_safety(c, d)
+# c = np.linspace(10, 5, 400)
+# d = np.zeros(400)
+# d[15], d[50], d[160], d[300], d[-1] = 1, 1, 1, 1, 1
+# plot_margin_of_safety(c, d)
+
+
