@@ -36,5 +36,5 @@ min_margin_of_safety = np.min(margin_of_safety_lowest)
 if min_margin_of_safety <= 1:
     print("WATCH OUT: lowest margin of safety is", min_margin_of_safety)
 
-plot_margin_of_safety([margin_of_safety_lowest], legends=['Tensile'])
+plot_margin_of_safety([margin_of_safety_lowest], legends=['Tensile/Compressive'])
 
