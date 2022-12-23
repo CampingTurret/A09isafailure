@@ -29,7 +29,9 @@ margin_of_safety3 = failure_stress/sigma_y3
 # print("MoS3:",plot_margin_of_safety(margin_of_safety3))
 
 # print("np.minimum test", np.minimum(np.array([1,2,3]), np.array([4, -1, -5])))
-margin_of_safety_lowest = np.minimum(margin_of_safety1, margin_of_safety2, margin_of_safety3)
+margin_of_safety_lowest0 = np.minimum(margin_of_safety1, margin_of_safety2, margin_of_safety3)
+margin_of_safety_lowest = np.minimum(margin_of_safety_lowest0, margin_of_safety3)
+print(margin_of_safety_lowest-margin_of_safety_lowest0)
 
 print(margin_of_safety_lowest)
 min_margin_of_safety = np.min(margin_of_safety_lowest)
