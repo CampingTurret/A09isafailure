@@ -66,8 +66,17 @@ h_rear = h2 * c
 up_beam = w1 * c
 low_beam = w2 * c
 
+dh = (h_front-h_rear)/2
+dhs = dh/((X2-X1)*c)
+ang = np.rad2deg(dhs)
+
 l_top=w1*c
 l_bot=w2*c
+
+# print(l_top)
+# print(l_bot)
+# print(h_front)
+# print(h_rear)
 
 area_skin = (h_front+h_rear)*t_spar+(up_beam+low_beam)*t
 area = (h_front+h_rear)*t_spar+(up_beam+low_beam)*t+A_stringer*n
@@ -81,6 +90,9 @@ print("Structure Weight:",str(volume*2700),"[kg]\n")
 ds = h_front + h_rear + up_beam + low_beam
 enc_area = (h_front + h_rear)/2 * (X2-X1) * c
 J = 4 * (enc_area)**2 / (h_front/t_spar + h_rear/t_spar + up_beam/t + low_beam/t)
+
+# vol=2*(np.trapz(enc_area,y)) 
+# print(str(vol*2700))
 
 left_ax = t_spar * h_front * X1 * c # Centroid stuff
 left_a = t_spar * h_front # Area
@@ -119,24 +131,24 @@ I_y_top = 0
 top_y0 = h_front - y_axis
 top_slope = -((up_beam**2-((X2-X1)*c)**2)**0.5) / ((X2-X1)*c)
 top_end = top_y0 + top_slope *c
-top_stringer_distance = (top_y0 - top_end) /(n-1)
+top_stringer_distance = (top_y0 - top_end) /(n+1)
 
-top_dist = top_y0
+top_dist = top_y0-top_stringer_distance
 
 m = n
 while m > 0.1 :
     I_stringer_top = A_stringer * top_dist**2
     I_y_top += I_stringer_top
-
+    
     top_dist -= top_stringer_distance
     m = m-1
 
 bot_y0 = -y_axis
 bot_slope = ((low_beam**2-((X2-X1)*c)**2)**0.5) / ((X2-X1)*c)
 bot_end = bot_y0 + bot_slope *c
-bot_stringer_distance = (bot_y0 - bot_end) /(n-1)
+bot_stringer_distance = (bot_y0 - bot_end) /(n+1)
 
-bot_dist = bot_y0
+bot_dist = bot_y0-bot_stringer_distance
 
 # print(bot_y0)
 # print("\n")
@@ -155,9 +167,11 @@ I_wingbox_l = t_spar * h_front**3 /12 + t_spar*h_front * (h_front/2 - y_axis)**2
 
 I_wingbox_r = t_spar * h_rear**3 /12 + t_spar*h_rear * (h_rear/2 - y_axis)**2
 
-I_wingbox_u = up_beam * t * ( h_front-((up_beam**2-((X2-X1)*c)**2)**0.5)/2-y_axis)**2
+# I_wingbox_u = up_beam * t * ( h_front-((up_beam**2-((X2-X1)*c)**2)**0.5)/2-y_axis)**2
+I_wingbox_u = t*up_beam**3*(np.sin(dhs)**2)/12 + t*up_beam*(h_rear/2+dh/2)**2
 
-I_wingbox_d = low_beam * t * ( ((low_beam**2-((X2-X1)*c)**2)**0.5)/2 - y_axis)**2
+# I_wingbox_d = low_beam * t * ( ((low_beam**2-((X2-X1)*c)**2)**0.5)/2 - y_axis)**2
+I_wingbox_d = t*low_beam**3*(np.sin(dhs)**2)/12 + t*low_beam*(h_rear/2+dh/2)**2
 
 I_wingbox = I_wingbox_l + I_wingbox_r + I_wingbox_u + I_wingbox_d
 
@@ -304,7 +318,7 @@ def qshear(V):
     for i in range(400): # Calculate qs0
         int1[i]=sp.integrate.quad(lambda s: k[i]*t_spar*(s**2)/2*(x_axis[i]-X1*c[i]),0,h_front[i]/2)[0]
         
-        h1=h_front[i]/2-(h_front[i]/2-h_rear[i]/2)/((X2-X1)*c[i])*(x_axis[i]-X1*c[i])
+        # h1=h_front[i]/2-(h_front[i]/2-h_rear[i]/2)/((X2-X1)*c[i])*(x_axis[i]-X1*c[i])
         int2[i]=sp.integrate.quad(lambda s: k[i]*t*((h_front[i]/2)*s-(s**2)/2*((h_front[i]/2-h_rear[i]/2)/l_top[i]))*h1*(X2-X1)*c[i]/l_top[i],0,l_top[i])[0]
         
         int3[i]=sp.integrate.quad(lambda s: k[i]*t_spar*(h_rear[i]/2*s-(s**2)/2)+q12[i],0,h_rear[i]/2)[0]
@@ -322,13 +336,55 @@ def qshear(V):
     qa_max=max(abs(qa))
     qb_max=max(abs(qb))
     
+    # if qa_max>qb_max:
+    #     print("lol you fucked up")
+    
     q=(max(qa_max,qb_max))
     
-    return q
+    return qa_max,qb_max
 
-q1=qshear(V1)
-q2=qshear(V2)
-q3=qshear(V3)
+def qshearDist(V):
+    
+    k=-(V/I)
+    
+    q01=fq1(h_front/2,k)
+    q12=fq2(w1,k)
+    q23=fq3(0,k,q12)
+    
+    # print(q12)
+    
+    int1=np.zeros(400)
+    int2=np.zeros(400)
+    int3=np.zeros(400)
+    
+    for i in range(400): # Calculate qs0
+        int1[i]=sp.integrate.quad(lambda s: k[i]*t_spar*(s**2)/2*(x_axis[i]-X1*c[i]),0,h_front[i]/2)[0]
+        
+        # h1=h_front[i]/2-(h_front[i]/2-h_rear[i]/2)/((X2-X1)*c[i])*(x_axis[i]-X1*c[i])
+        int2[i]=sp.integrate.quad(lambda s: k[i]*t*((h_front[i]/2)*s-(s**2)/2*((h_front[i]/2-h_rear[i]/2)/l_top[i]))*h1*(X2-X1)*c[i]/l_top[i],0,l_top[i])[0]
+        
+        int3[i]=sp.integrate.quad(lambda s: k[i]*t_spar*(h_rear[i]/2*s-(s**2)/2)+q12[i],0,h_rear[i]/2)[0]
+    
+    qs0=-2*(int1+int2+int3)/enc_area
+    
+    qa = q01+qs0
+    qb = q12+qs0
+    qc = q23+qs0
+    
+    # print(qa)
+    # print(qb)
+    # print("\n")
+    
+    # qa_max=max(abs(qa))
+    # qb_max=max(abs(qb))
+    
+    # q=(max(qa_max,qb_max))
+    
+    return qa,qb
+
+q1a,q1b=qshear(V1)
+q2a,q2b=qshear(V2)
+q3a,q3b=qshear(V3)
 
 theta1,v1=mov(T1,M1)
 theta2,v2=mov(T2,M2)
@@ -336,15 +392,20 @@ theta3,v3=mov(T3,M3)
 
 ##### Internal Stresses
 
+# print(I)
+
 # Shear V
 
-vtau1 = q1/(min(t,t_spar))/10**6
-vtau2 = q2/(min(t,t_spar))/10**6
-vtau3 = q3/(min(t,t_spar))/10**6
+vtau1a = q1a/(min(t,t_spar))/10**6
+vtau1b = q1b/(min(t,t_spar))/10**6
+vtau2a = q2a/(min(t,t_spar))/10**6
+vtau2b = q2b/(min(t,t_spar))/10**6
+vtau3a = q3a/(min(t,t_spar))/10**6
+vtau3b = q3b/(min(t,t_spar))/10**6
 
 # Bending Mx
 
-sigma_y1 = (M1 * h1/2)/I
+sigma_y1 = (M1 * (h1/2))/I
 sigma_max1 = round(max(sigma_y1)/10**6, 2)
 
 sigma_y2 = (M2 * h1/2)/I
@@ -356,37 +417,45 @@ sigma_max3 = round(max(sigma_y3)/10**6, 2)
 # Torsion T
 
 tau1 = T1 / (2*enc_area*t)
-tau_max1 = round(min(tau1)/10**6, 2)-vtau1
+tau_max1 = round(min(tau1)/10**6, 2)
 
 tau2 = T2 / (2*enc_area*t)
-tau_max2 = round(min(tau2)/10**6, 2)-vtau2
+tau_max2 = round(min(tau2)/10**6, 2)-vtau2a
 
 tau3 = T3 / (2*enc_area*t)
-tau_max3 = round(min(tau3)/10**6, 2)-vtau3
+tau_max3 = round(min(tau3)/10**6, 2)-vtau3a
+
+front_spar = tau_max1-vtau1a
+rear_spar = tau_max1+vtau1b
 
 print("### Positive - Bending Limiting ###\n")
 
 print('Angle of twist is', np.sum(theta1), '[rad]')
 print('Deflection is', np.sum(v1), '[m]')
 print('Maximum normal stress due to bending is',sigma_max1,'[MPa]')
-print('Maximum shear stress due to torsion is',tau_max1,'[MPa]\n')
-print('Tau contribution due to shear: ',-1*vtau1,'[MPa]\n')
+print('Maximum shear stress is',tau_max1,'[MPa]\n')
+print('Tau contribution due to shear: ',-1*vtau1a,'[MPa]\n')
 
-print("### Zero - Torsion Limiting ###\n")
+print('Front Spar Shear:',str(front_spar))
+print('Rear Spar Shear:',str(rear_spar))
+print(str(vtau1a))
+print(str(vtau1b))
 
-print('Angle of twist is', np.sum(theta2), '[rad]')
-print('Deflection is', np.sum(v2), '[m]')
-print('Maximum normal stress due to bending is',sigma_max2,'[MPa]')
-print('Maximum shear stress due to torsion is',tau_max2,'[MPa]\n')
-print('Tau contribution due to shear: ',-1*vtau2,'[MPa]\n')
+# print("### Zero - Torsion Limiting ###\n")
 
-print("### Negative ###\n")
+# print('Angle of twist is', np.sum(theta2), '[rad]')
+# print('Deflection is', np.sum(v2), '[m]')
+# print('Maximum normal stress due to bending is',sigma_max2,'[MPa]')
+# print('Maximum shear stress is',tau_max2,'[MPa]\n')
+# print('Tau contribution due to shear: ',-1*vtau2a,'[MPa]\n')
 
-print('Angle of twist is', np.sum(theta3), '[rad]')
-print('Deflection is', np.sum(v3), '[m]')
-print('Maximum normal stress due to bending is',sigma_max3,'[MPa]')
-print('Maximum shear stress due to torsion is',tau_max3,'[MPa]\n')
-print('Tau contribution due to shear: ',-1*vtau3,'[MPa]\n')
+# print("### Negative ###\n")
+
+# print('Angle of twist is', np.sum(theta3), '[rad]')
+# print('Deflection is', np.sum(v3), '[m]')
+# print('Maximum normal stress due to bending is',sigma_max3,'[MPa]')
+# print('Maximum shear stress is',tau_max3,'[MPa]\n')
+# print('Tau contribution due to shear: ',-1*vtau3a,'[MPa]\n')
 
 def movPlot(v,theta,lc,design):
 
@@ -437,9 +506,9 @@ def movPlot(v,theta,lc,design):
 
     # twi = plt.figure(figsize=(10,5))
     
-movPlot(v1,theta1,26,3)
-movPlot(v2,theta2,18,3)
-movPlot(v3,theta3,15,3)
+# movPlot(v1,theta1,26,3)
+# movPlot(v2,theta2,18,3)
+# movPlot(v3,theta3,15,3)
 
 '''
 Second value in each function is the loading case, third value in each is the design number.
@@ -448,7 +517,20 @@ Order running from main: 26-18-15
 Change the design number depending on what geometric values you are inputting.
 '''
 
+def spanInternalShear(shear,t,tau):
+    
+    q_front,q_rear = qshearDist(shear)
+    
+    front=tau1/10**6+q_front/(t)
+    rear=tau1/10**6-q_rear/(t)
+    
+    return front,rear
 
+
+# v_front,v_rear=spanInternalShear(V1,min(t,t_spar),tau1)
+# plt.plot(y,v_front, color="black")
+# plt.plot(y,v_rear, color="red")
+# plt.show()
 
 
     

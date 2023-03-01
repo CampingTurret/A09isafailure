@@ -51,3 +51,8 @@ q=38529.56074
 sample=400
 mach=0.735
 
+# Material Specific
+
+E = 68.9*10**9
+nu = 0.33 # Poisson's Ratio
+
